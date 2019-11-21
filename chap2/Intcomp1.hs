@@ -12,6 +12,12 @@ module Intcomp1 where
 
 import Prelude hiding (lookup)
 import Control.Applicative 
+import Control.Monad.Trans.Class
+import Control.Monad.Trans.State
+import Data.List (intercalate)
+
+
+{-*----------------------------------------------------------------------*-}
 
 {- # Expressions with Let-Bindings and Static Scope # -}
 
@@ -71,7 +77,7 @@ closedin (Prim (op, e1, e2)) vs
 
 closed1 e = closedin e []
 
--- | Some closed expressions: 
+-- Some closed expressions: 
 
 e1 = Let ("z", CstI 17, Prim ("+", Var "z", Var "z"))
 
@@ -210,33 +216,77 @@ instance Monad (Fresh s) where
 fresh :: Enum x => Fresh x x
 fresh = Fresh (\x -> (x, succ x)) 
 
-newVar :: String -> String 
-newVar = let n = 0
-             varMaker x = let n' = 1 + n 
-                          in  x ++ show n'
-         in  varMaker
+runFresh :: Fresh Int a -> (a, Int)
+runFresh (Fresh f) = f 0
+
+-- If we used the State monad in our implementation for substitution, 
+-- this would use env as our state and expr as our value. This gives 
+-- the type: 'State [(String, Expr)] Expr'.
+-- If we introduced a counter that we also use as a state alongside 
+-- env, we could define this type as 'State ([(String, Expr)], Int) Expr'. 
+-- However, using this tuple as a state is troublesome, as we do not want 
+-- to have to deal with both the env and counter every time one of them is 
+-- updated.
+-- Instead, we will isolate the counter from the env, by introducing
+-- a State monad where the counter is the state and the previous state monad
+-- is the value. This gives the type: 'State Int (State [(String, Expr)] Expr)'.
+-- When we use a counter as a state however, there is a better monad we
+-- can use than the State monad - this is called the Fresh monad, which
+-- is exactly the same except it only has one operation which lets us increment
+-- the counter. This gives the type: 'Fresh Int (State [(String, Expr)] Expr)'.
+-- Having nested monads can be cleaned up by introducing monad transformers.
+-- As the inner monad is the State monad, we can use the StateT monad as the
+-- outer monad. This gives us the type: 'StateT [(String, Expr)] (Fresh Int) Expr'.
+
+-- subst :: Expr -> [(String, Expr)] -> Expr 
+-- subst (CstI i) env = return (CstI i)
+-- subst (Var x) env  = lookOrSelf env x 
+-- subst (Let (x, erhs, ebody)) env
+--     = let newx   = newVar x
+--           newenv = ((x, Var newx):(remove env x)) 
+--       in  Let (newx, subst erhs env, subst ebody newenv)
+-- subst (Prim (op, e1, e2)) env
+--     = Prim (op, subst e1 env, subst e2 env)
 
 subst :: Expr -> StateT [(String, Expr)] (Fresh Int) Expr 
-subst (CstI i) = return (CstI i)
+subst (CstI i) 
+    = return (CstI i)
 subst (Var x)
     = do 
-     env' <- env  
-                    lookOrSelf env x 
-subst (Let (x, erhs, ebody)) env
-    = let newx   = newVar x
-          newenv = ((x, Var newx):(remove env x)) 
-      in  Let (newx, subst erhs env, subst ebody newenv)
-subst (Prim (op, e1, e2)) env
-    = Prim (op, subst e1 env, subst e2 env)
+     env <- get   
+     return (lookOrSelf env x)
+subst (Let (x, erhs, ebody)) 
+    = do 
+     env <- get
+     erhs1 <- subst erhs 
+     counter <- lift $ fresh
+     let newx   = x ++ show counter
+         newenv = ((x, Var newx):(remove env x)) 
+     put newenv 
+     ebody1 <- subst ebody
+     put env 
+     return (Let (newx, erhs1, ebody1))
+subst (Prim (op, e1, e2)) 
+    = do 
+     env <- get 
+     e1' <- subst e1 
+     put env
+     e2' <- subst e2
+     put env
+     return (Prim (op, e1', e2'))
 
--- Shows renaming of bound variable z (to z1)
-e7s1a = subst e7 [("z", CstI 100)]
+runSubst :: Expr -> [(String, Expr)] -> Expr
+runSubst expr env = let ((expr', env'), counter) = runFresh $ runStateT (subst expr) env
+                    in  expr'
 
--- Shows renaming of bound variable z (to z2)
-e8s1a = subst e8 [("z", CstI 100)]
+-- Shows renaming of bound variable z (to z0)
+subst_e7 = runSubst e7 [("z", CstI 100)] 
 
--- Shows renaming of bound variable z (to z3), avoiding capture of free z
-e9s1a = subst e9 [("y", Var "z")]
+-- Shows renaming of bound variable z (to z0)
+subst_e8 = runSubst e8 [("z", CstI 100)]
+
+-- Shows renaming of bound variable z (to z0), avoiding capture of free z
+subst_e9 = runSubst e9 [("y", Var "z")]
 
 {-*----------------------------------------------------------------------*-}
 
@@ -251,7 +301,7 @@ data TExpr = TCstI Int
 
 -- | Map variable name to variable index at compile-time
 
-getindex :: [String] -> String -> Int
+getindex :: Eq a => [a] -> a -> Int
 getindex vs x 
     = case vs of []     -> error "Variable not found"
                  (y:yr) -> if x == y then 0 else 1 + getindex yr x
@@ -283,7 +333,7 @@ teval (TPrim (op, e1, e2)) renv
     | op == "-" = teval e1 renv - teval e2 renv
     | otherwise = error "unknown primitive"
 
--- | Correctness: eval e []  equals  teval (tcomp e []) [] 
+-- Correctness: eval e []  equals  teval (tcomp e []) [] 
 
 
 {-*----------------------------------------------------------------------*-}
@@ -303,4 +353,93 @@ data RInstr = RCstI Int
 
 -- | A simple stack machine for evaluation of variable-free expressions
 --   in postfix form
+
+reval :: [RInstr] -> [Int] -> Int 
+reval inss stack =
+    case (inss, stack) of 
+        ([], (v:vs))                      -> v 
+        ([], [])                          -> error "reval: no result on stack!"
+        (((RCstI i):insr),  stk)          -> reval insr (i:stk)
+        ((RAdd:insr),       (i2:i1:stkr)) -> reval insr ((i1+i2):stkr)
+        ((RSub:insr),       (i2:i1:stkr)) -> reval insr ((i1-i2):stkr)
+        ((RMul:insr),       (i2:i1:stkr)) -> reval insr ((i1*i2):stkr)
+        ((RDup:insr),       (i1:stkr))    -> reval insr (i1:i1:stkr)
+        ((RSwap:insr),      (i2:i1:stkr)) -> reval insr (i1:i2:stkr)
+        _                                 -> error "reval: too few operands on stack"
+        
+-- | Compilation of a variable-free expression to a RInstr list
+
+rcomp :: Expr -> [RInstr]
+rcomp (CstI i) = [RCstI i]
+rcomp (Var _)  = error "rcomp cannot compile Var"
+rcomp (Let _)  = error "rcomp cannot compile Let"
+rcomp (Prim (op, e1, e2)) =
+    case op of 
+        "+" -> rcomp e1 ++ rcomp e2 ++ [RAdd]
+        "-" -> rcomp e1 ++ rcomp e2 ++ [RSub]
+        "*" -> rcomp e1 ++ rcomp e2 ++ [RMul]
+        _   -> error "unknown primitive"
+
+-- Correctness: eval e []  equals  reval (rcomp e) [] 
+
+
+-- | Storing intermediate results and variable bindings in the same stack 
+
+data SInstr = SCstI Int     -- push integer
+            | SVar Int      -- push variable from env
+            | SAdd          -- pop args, push sum
+            | SSub          -- pop args, push difference
+            | SMul          -- pop args, push product
+            | SPop          -- pop value/unbind var
+            | SSwap         -- exchange top and next
+
+
+seval :: [SInstr] -> [Int] -> Int 
+seval inss stack =
+    case (inss, stack) of 
+        ([], (v:vs))                      -> v 
+        ([], [])                          -> error "seval: no result on stack!"
+        (((SCstI i):insr),  stk)          -> seval insr (i:stk)
+        (((SVar i):insr),   stk)          -> seval insr ((stk !! i):stk)
+        ((SAdd:insr),       (i2:i1:stkr)) -> seval insr ((i1+i2):stkr)
+        ((SSub:insr),       (i2:i1:stkr)) -> seval insr ((i1-i2):stkr)
+        ((SMul:insr),       (i2:i1:stkr)) -> seval insr ((i1*i2):stkr)
+        ((SPop:insr),       (_:stkr))     -> seval insr stkr
+        ((SSwap:insr),      (i2:i1:stkr)) -> seval insr (i1:i2:stkr)
+        _                                 -> error "seval: too few operands on stack"
+        
+
+-- | A compile-time variable environment representing the state of
+--   the run-time stack.
+
+data StackValue = Value         -- a computed value
+                | Bound String  -- a bound variable
+                deriving Eq
+
+-- | Compilation to a list of instructions for a unified-stack machine
+
+scomp :: Expr -> [StackValue] -> [SInstr]
+scomp (CstI i) cenv = [SCstI i]
+scomp (Var x) cenv  = [SVar (getindex cenv (Bound x))]
+scomp (Let (x, erhs, ebody)) cenv
+    = scomp erhs cenv ++ scomp ebody ((Bound x):cenv) ++ [SSwap, SPop]
+scomp (Prim (op, e1, e2)) cenv
+    = case op of 
+        "+" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SAdd] 
+        "-" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SSub] 
+        "*" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SMul] 
+        _   -> error "scomp: unknown operator"
+
+
+s1 = scomp e1 []
+s2 = scomp e2 []
+s3 = scomp e3 []
+s5 = scomp e5 []
+
+-- | Output the integers in list inss to the text file called fname: 
+
+intsToFile :: [Int] -> String -> IO ()
+intsToFile inss fname = do 
+                let text = intercalate " " (map show inss)
+                writeFile fname text
 
