@@ -6,7 +6,8 @@ module Intro1 where
 
 data Expr = CstI Int 
           | Prim (String, Expr, Expr)  
-
+          deriving Show
+          
 e1 = CstI 17
 e2 = Prim ("-", CstI 3, CstI 4)
 e3 = Prim ("+", Prim ("*", CstI 7, CstI 9), CstI 10)

@@ -25,7 +25,8 @@ cvalue = lookup env "c"
 data Expr = CstI Int 
           | Var String
           | Prim (String, Expr, Expr)  
-
+          deriving Show
+          
 e1 = CstI 17
 e2 = Prim ("+", CstI 3, Var "a")
 e3 = Prim ("+", Prim ("*", Var "b", CstI 9), Var "a")
