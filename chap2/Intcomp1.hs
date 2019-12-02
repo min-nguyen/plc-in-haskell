@@ -236,45 +236,58 @@ runFresh (Fresh f) = f 0
 -- As the inner monad is the State monad, we can use the StateT monad as the
 -- outer monad. This gives us the type: 'StateT [(String, Expr)] (Fresh Int) Expr'.
 
--- subst :: Expr -> [(String, Expr)] -> Expr 
--- subst (CstI i) env = return (CstI i)
--- subst (Var x) env  = lookOrSelf env x 
--- subst (Let (x, erhs, ebody)) env
---     = let newx   = newVar x
---           newenv = ((x, Var newx):(remove env x)) 
---       in  Let (newx, subst erhs env, subst ebody newenv)
--- subst (Prim (op, e1, e2)) env
---     = Prim (op, subst e1 env, subst e2 env)
+-- subst :: Expr -> StateT [(String, Expr)] (Fresh Int) Expr 
+-- subst (CstI i) 
+--     = return (CstI i)
+-- subst (Var x)
+--     = do 
+--      env <- get   
+--      return (lookOrSelf env x)
+-- subst (Let x erhs ebody) 
+--     = do 
+--      env <- get
+--      erhs1 <- subst erhs 
+--      counter <- lift $ fresh
+--      let newx   = x ++ show counter
+--          newenv = ((x, Var newx):(remove env x)) 
+--      put newenv 
+--      ebody1 <- subst ebody
+--      put env 
+--      return (Let newx erhs1 ebody1)
+-- subst (Prim op e1 e2) 
+--     = do 
+--      env <- get 
+--      e1' <- subst e1 
+--      put env
+--      e2' <- subst e2
+--      put env
+--      return (Prim op e1' e2')
 
-subst :: Expr -> StateT [(String, Expr)] (Fresh Int) Expr 
-subst (CstI i) 
+-- runSubst :: Expr -> [(String, Expr)] -> Expr
+-- runSubst expr env = let ((expr', env'), counter) = runFresh $ runStateT (subst expr) env
+--                     in  expr'
+
+subst :: Expr -> [(String, Expr)] -> Fresh Int Expr
+subst (CstI i) env 
     = return (CstI i)
-subst (Var x)
+subst (Var x) env
+    = return (lookOrSelf env x)
+subst (Let x erhs ebody) env 
     = do 
-     env <- get   
-     return (lookOrSelf env x)
-subst (Let x erhs ebody) 
+        erhs1   <- subst erhs env  
+        counter <- fresh
+        let newx   = x ++ show counter 
+            newenv = ((x, Var newx):(remove env x))
+        ebody1  <- subst ebody newenv 
+        return (Let newx erhs1 ebody1)
+subst (Prim op e1 e2) env
     = do 
-     env <- get
-     erhs1 <- subst erhs 
-     counter <- lift $ fresh
-     let newx   = x ++ show counter
-         newenv = ((x, Var newx):(remove env x)) 
-     put newenv 
-     ebody1 <- subst ebody
-     put env 
-     return (Let newx erhs1 ebody1)
-subst (Prim op e1 e2) 
-    = do 
-     env <- get 
-     e1' <- subst e1 
-     put env
-     e2' <- subst e2
-     put env
-     return (Prim op e1' e2')
+        e1' <- subst e1 env
+        e2' <- subst e2 env 
+        return (Prim op e1' e2')
 
 runSubst :: Expr -> [(String, Expr)] -> Expr
-runSubst expr env = let ((expr', env'), counter) = runFresh $ runStateT (subst expr) env
+runSubst expr env = let (expr', counter) = runFresh (subst expr env) 
                     in  expr'
 
 -- Shows renaming of bound variable z (to z0)
