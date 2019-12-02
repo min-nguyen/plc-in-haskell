@@ -23,18 +23,18 @@ import Data.List (intercalate)
 
 data Expr = CstI Int
           | Var  String
-          | Let  (String, Expr, Expr)
-          | Prim (String, Expr, Expr)
+          | Let  String Expr Expr
+          | Prim String Expr Expr
           deriving Show
 
 eval :: Expr -> [(String, Int)] -> Int 
 eval (CstI i) env   = i
 eval (Var x)  env   = lookup env x
-eval (Let (x, erhs, ebody)) env
+eval (Let x erhs ebody) env
     = let xval = eval erhs env 
           env1 = ((x, xval):env)
       in  eval ebody env1
-eval (Prim (op, e1, e2)) env 
+eval (Prim op e1 e2) env 
     | op == "+" = eval e1 env + eval e2 env 
     | op == "*" = eval e1 env * eval e2 env
     | op == "-" = eval e1 env - eval e2 env
@@ -67,10 +67,10 @@ mem x vs
 closedin :: Expr -> [String] -> Bool
 closedin (CstI i) vs = True
 closedin (Var x) vs  = mem x vs 
-closedin (Let (x, erhs, ebody)) vs 
+closedin (Let x erhs ebody) vs 
     = let vs1 = (x:vs)
       in  closedin erhs vs && closedin ebody vs1
-closedin (Prim (op, e1, e2)) vs
+closedin (Prim op e1 e2) vs
     = closedin e1 vs && closedin e2 vs
 
 -- | An expression is closed if it is closed in the empty environment 
@@ -79,20 +79,20 @@ closed1 e = closedin e []
 
 -- Some closed expressions: 
 
-e1 = Let ("z", CstI 17, Prim ("+", Var "z", Var "z"))
+e1 = Let "z" (CstI 17) (Prim "+" (Var "z") (Var "z"))
 
-e2 = Let ("z", CstI 17, 
-          Prim ("+", Let ("z", CstI 22, Prim ("*", CstI 100, Var "z")),
-                     Var "z"))
+e2 = Let "z" (CstI 17) 
+          (Prim "+" (Let "z" (CstI 22) (Prim "*" (CstI 100) (Var "z")))
+                    (Var "z"))
 
-e3 = Let ("z", Prim ("-", CstI 5, CstI 4), 
-          Prim ("*", CstI 100, Var "z"))
+e3 = Let "z" (Prim "-" (CstI 5) (CstI 4)) 
+          (Prim "*" (CstI 100) (Var "z"))
 
-e4 = Prim ("+", Prim ("+", CstI 20, Let ("z", CstI 17, 
-                                         Prim ("+", Var "z", CstI 2))),
-                CstI 30)
+e4 = Prim "+" (Prim "+" (CstI 20) (Let "z" (CstI 17) 
+                                       (Prim "+" (Var "z") (CstI 2))))
+              (CstI 30)
 
-e5 = Prim ("*", CstI 2, Let ("x", CstI 3, Prim ("+", Var "x", CstI 4)))
+e5 = Prim "*" (CstI 2) (Let "x" (CstI 3) (Prim "+" (Var "x") (CstI 4)))
 
 
 {-*----------------------------------------------------------------------*-}
@@ -129,9 +129,9 @@ minus (xs, ys)
 freevars :: Expr -> [String]
 freevars (CstI i) = []
 freevars (Var x)  = [x]
-freevars (Let (x, erhs, ebody)) 
+freevars (Let x erhs ebody) 
     = union (freevars erhs, minus (freevars ebody, [x]))
-freevars (Prim (op, e1, e2)) 
+freevars (Prim op e1 e2) 
     = union (freevars e1, freevars e2)
 
 -- | Alternative definition of closed
@@ -148,16 +148,14 @@ closed2 e = (freevars e == [])
 --   pair (x,e) in the list env --- instead of failing with exception: 
 
 lookOrSelf :: [(String, Expr)] -> String -> Expr 
-lookOrSelf env x 
-    = case env of []         -> Var x 
-                  ((y, e):r) -> if x == y then e else lookOrSelf r x
+lookOrSelf [] x         = Var x 
+lookOrSelf ((y, e):r) x = if x == y then e else lookOrSelf r x
 
 -- | Remove (x, _) from env: 
 
 remove :: [(String, Expr)] -> String -> [(String, Expr)]
-remove env x 
-    = case env of []         -> []
-                  ((y, e):r) -> if x == y then r else ((y, e):(remove r x))
+remove [] x         = []
+remove ((y, e):r) x = if x == y then r else ((y, e):(remove r x))
 
 
 -- | Naive Substitution (may capture free variables) 
@@ -165,38 +163,38 @@ remove env x
 nsubst :: Expr -> [(String, Expr)] -> Expr 
 nsubst (CstI i) env = CstI i
 nsubst (Var x)  env = lookOrSelf env x 
-nsubst (Let (x, erhs, ebody)) env
+nsubst (Let x erhs ebody) env
     = let newenv = remove env x 
-      in  Let (x, nsubst erhs env, nsubst ebody newenv)
-nsubst (Prim (op, e1, e2)) env
-    = Prim (op, nsubst e1 env, nsubst e2 env)
+      in  Let x (nsubst erhs env) (nsubst ebody newenv)
+nsubst (Prim op e1 e2) env
+    = Prim op (nsubst e1 env) (nsubst e2 env)
 
 -- Some expressions with free variables 
-e6   = Prim ("+", Var "y", Var "z")
+e6   = Prim "+" (Var "y") (Var "z")
 
 e6s1 = nsubst e6 [("z", CstI 17)]
 
-e6s2 = nsubst e6 [("z", Prim ("-", CstI 5, CstI 4))]
+e6s2 = nsubst e6 [("z", Prim "-" (CstI 5) (CstI 4))]
 
-e6s3 = nsubst e6 [("z", Prim ("+", Var "z", Var "z"))]
+e6s3 = nsubst e6 [("z", Prim "+" (Var "z") (Var "z"))]
 
 -- Shows that only z outside the Let gets substituted
-e7   = Prim ("+", Let ("z", CstI 22, Prim ("*", CstI 5, Var "z")),
-                  Var "z")
+e7   = Prim "+" (Let "z" (CstI 22) (Prim "*" (CstI 5) (Var "z")))
+                (Var "z")
 
 e7s1 = nsubst e7 [("z", CstI 100)]
 
 -- Shows that only the z in the Let rhs gets substituted
-e8   = Let ("z", Prim ("*", CstI 22, Var "z"), Prim ("*", CstI 5, Var "z"))
+e8   = Let "z" (Prim "*" (CstI 22) (Var "z")) (Prim "*" (CstI 5) (Var "z"))
 
 e8s1 = nsubst e8 [("z", CstI 100)]
 
 -- Shows (wrong) capture of free variable z under the Let
-e9   = Let ("z", CstI 22, Prim ("*", Var "y", Var "z"))
+e9   = Let "z" (CstI 22) (Prim "*" (Var "y") (Var "z"))
 
 e9s1 = nsubst e9 [("y", Var "z")]
 
-e9s2 = nsubst e9 [("z", Prim ("-", CstI 5, CstI 4))]
+e9s2 = nsubst e9 [("z", Prim "-" (CstI 5) (CstI 4))]
 
 
 -- | Correct Substitution (avoids capturing free variables)
@@ -255,7 +253,7 @@ subst (Var x)
     = do 
      env <- get   
      return (lookOrSelf env x)
-subst (Let (x, erhs, ebody)) 
+subst (Let x erhs ebody) 
     = do 
      env <- get
      erhs1 <- subst erhs 
@@ -265,15 +263,15 @@ subst (Let (x, erhs, ebody))
      put newenv 
      ebody1 <- subst ebody
      put env 
-     return (Let (newx, erhs1, ebody1))
-subst (Prim (op, e1, e2)) 
+     return (Let newx erhs1 ebody1)
+subst (Prim op e1 e2) 
     = do 
      env <- get 
      e1' <- subst e1 
      put env
      e2' <- subst e2
      put env
-     return (Prim (op, e1', e2'))
+     return (Prim op e1' e2')
 
 runSubst :: Expr -> [(String, Expr)] -> Expr
 runSubst expr env = let ((expr', env'), counter) = runFresh $ runStateT (subst expr) env
@@ -295,8 +293,8 @@ subst_e9 = runSubst e9 [("y", Var "z")]
 
 data TExpr = TCstI Int 
            | TVar Int 
-           | TLet (TExpr, TExpr)
-           | TPrim (String, TExpr, TExpr)
+           | TLet TExpr TExpr
+           | TPrim String TExpr TExpr
            deriving Show 
 
 -- | Map variable name to variable index at compile-time
@@ -311,11 +309,11 @@ getindex vs x
 tcomp :: Expr -> [String] -> TExpr 
 tcomp (CstI i) cenv = TCstI i
 tcomp (Var x) cenv = TVar (getindex cenv x)
-tcomp (Let (x, erhs, ebody)) cenv
+tcomp (Let x erhs ebody) cenv
     = let cenv1 = (x:cenv)
-      in  TLet (tcomp erhs cenv, tcomp ebody cenv1)
-tcomp (Prim (op, e1, e2)) cenv
-    = TPrim (op, tcomp e1 cenv, tcomp e2 cenv)
+      in  TLet (tcomp erhs cenv) (tcomp ebody cenv1)
+tcomp (Prim op e1 e2) cenv
+    = TPrim op (tcomp e1 cenv) (tcomp e2 cenv)
 
 -- | Evaluation of target expressions with variable indexes. The
 --   run-time environment renv is a list of variable values (ints).
@@ -323,11 +321,11 @@ tcomp (Prim (op, e1, e2)) cenv
 teval :: TExpr -> [Int] -> Int 
 teval (TCstI i) renv   = i
 teval (TVar n)  renv   = renv !! n
-teval (TLet (erhs, ebody)) renv
+teval (TLet erhs ebody) renv
     = let xval  = teval erhs renv 
           renv1 = (xval:renv)
       in  teval ebody renv1
-teval (TPrim (op, e1, e2)) renv 
+teval (TPrim op e1 e2) renv 
     | op == "+" = teval e1 renv + teval e2 renv 
     | op == "*" = teval e1 renv * teval e2 renv
     | op == "-" = teval e1 renv - teval e2 renv
@@ -370,10 +368,10 @@ reval inss stack =
 -- | Compilation of a variable-free expression to a RInstr list
 
 rcomp :: Expr -> [RInstr]
-rcomp (CstI i) = [RCstI i]
-rcomp (Var _)  = error "rcomp cannot compile Var"
-rcomp (Let _)  = error "rcomp cannot compile Let"
-rcomp (Prim (op, e1, e2)) =
+rcomp (CstI i)        = [RCstI i]
+rcomp (Var _)         = error "rcomp cannot compile Var"
+rcomp (Let _ _ _)     = error "rcomp cannot compile Let"
+rcomp (Prim op e1 e2) =
     case op of 
         "+" -> rcomp e1 ++ rcomp e2 ++ [RAdd]
         "-" -> rcomp e1 ++ rcomp e2 ++ [RSub]
@@ -421,9 +419,9 @@ data StackValue = Value         -- a computed value
 scomp :: Expr -> [StackValue] -> [SInstr]
 scomp (CstI i) cenv = [SCstI i]
 scomp (Var x) cenv  = [SVar (getindex cenv (Bound x))]
-scomp (Let (x, erhs, ebody)) cenv
+scomp (Let x erhs ebody) cenv
     = scomp erhs cenv ++ scomp ebody ((Bound x):cenv) ++ [SSwap, SPop]
-scomp (Prim (op, e1, e2)) cenv
+scomp (Prim op e1 e2) cenv
     = case op of 
         "+" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SAdd] 
         "-" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SSub] 
