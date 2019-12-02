@@ -13,9 +13,8 @@ env      = [("a", 3), ("c", 78), ("baf", 666), ("b", 111)]
 emptyenv = []
 
 lookup :: [(String, Int)] -> String -> Int
-lookup env x = 
-    case env of []         -> error (x ++ " not found")
-                ((y, v):r) -> if x == y then v else lookup r x
+lookup [] x         = error (x ++ " not found")
+lookup ((y, v):r) x = if x == y then v else lookup r x
 
 cvalue = lookup env "c"
 
@@ -24,12 +23,12 @@ cvalue = lookup env "c"
 
 data Expr = CstI Int 
           | Var String
-          | Prim (String, Expr, Expr)  
+          | Prim String Expr Expr  
           deriving Show
           
 e1 = CstI 17
-e2 = Prim ("+", CstI 3, Var "a")
-e3 = Prim ("+", Prim ("*", Var "b", CstI 9), Var "a")
+e2 = Prim "+" (CstI 3) (Var "a")
+e3 = Prim "+" (Prim "*" (Var "b") (CstI 9)) (Var "a")
 
 
 {- Evaluation within an environment -}
@@ -37,7 +36,7 @@ e3 = Prim ("+", Prim ("*", Var "b", CstI 9), Var "a")
 eval :: Expr -> [(String, Int)] -> Int 
 eval (CstI i) env   = i
 eval (Var x)  env   = lookup env x
-eval (Prim (op, e1, e2)) env 
+eval (Prim op e1 e2) env 
     | op == "+" = eval e1 env + eval e2 env 
     | op == "*" = eval e1 env * eval e2 env
     | op == "-" = eval e1 env - eval e2 env
