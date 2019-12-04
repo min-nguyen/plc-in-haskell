@@ -2,11 +2,11 @@
 module ExprPar where
 
 import Absyn
-
+import ExprLex
 }
 
-%name happyParser
-%tokentype  { Token }
+%name exprParser
+%tokentype  { ExprLex.Token }
 %error      { parseError }
 
 
@@ -25,16 +25,18 @@ import Absyn
 
 %%
 
-Expr    : let var '=' Expr in Expr  { Let $2 $4 $6      }
+Expr    : var                       { Var  $1           }
+        | num                       { CstI $1           }
+        | '-' num                   { CstI (- $2)       }
+        | '(' Expr ')'              { $2                }
+        | let var '=' Expr in Expr  { Let $2 $4 $6      }
         | Expr '+' Expr             { Prim "+" $1 $3    }
         | Expr '-' Expr             { Prim "-" $1 $3    }
         | Expr '*' Expr             { Prim "*" $1 $3    }
-
         
 {
 
 parseError :: [Token] -> a 
 parseError _ = error "Parse error"
 
-main = getContents >>= print . happyParser . exprLexer
 }

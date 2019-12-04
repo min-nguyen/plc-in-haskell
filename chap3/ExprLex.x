@@ -1,5 +1,6 @@
 {
-module ExprLex (exprLexer) where 
+module ExprLex (  exprLexer
+                , Token(..)) where 
 }
 
 %wrapper "basic"
@@ -14,10 +15,10 @@ tokens :-
     $digit+                 { \s -> TokenNum (read s) }
     [\+\-\*]                { \s -> operator (head s) }
     [\=\(\)]                { \s -> delimiter (head s) }
-    $alpha [$alphanum]*     { \s -> TokenVar s }
     let                     { \s -> TokenLet }
     in                      { \s -> TokenIn }
     end                     { \s -> TokenEnd }
+    $alpha [$alphanum]*     { \s -> TokenVar s }
 
 {
 
@@ -44,7 +45,6 @@ data Token  = TokenLet
             | TokenRPar
             deriving (Show, Eq)
 
-main = do  
-    s <- getContents
-    print (alexScanTokens s)
+exprLexer :: String -> [Token]
+exprLexer s = alexScanTokens s
 }
