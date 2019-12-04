@@ -268,23 +268,19 @@ runFresh (Fresh f) = f 0
 --                     in  expr'
 
 subst :: Expr -> [(String, Expr)] -> Fresh Int Expr
-subst (CstI i) env 
-    = return (CstI i)
-subst (Var x) env
-    = return (lookOrSelf env x)
+subst (CstI i) env = return (CstI i)
+subst (Var x) env  = return (lookOrSelf env x)
 subst (Let x erhs ebody) env 
-    = do 
-        erhs1   <- subst erhs env  
-        counter <- fresh
-        let newx   = x ++ show counter 
-            newenv = ((x, Var newx):(remove env x))
-        ebody1  <- subst ebody newenv 
-        return (Let newx erhs1 ebody1)
+    = do erhs1   <- subst erhs env  
+         counter <- fresh
+         let newx   = x ++ show counter 
+             newenv = ((x, Var newx):(remove env x))
+         ebody1  <- subst ebody newenv 
+         return (Let newx erhs1 ebody1)
 subst (Prim op e1 e2) env
-    = do 
-        e1' <- subst e1 env
-        e2' <- subst e2 env 
-        return (Prim op e1' e2')
+    = do e1' <- subst e1 env
+         e2' <- subst e2 env 
+         return (Prim op e1' e2')
 
 runSubst :: Expr -> [(String, Expr)] -> Expr
 runSubst expr env = let (expr', counter) = runFresh (subst expr env) 
@@ -313,9 +309,8 @@ data TExpr = TCstI Int
 -- | Map variable name to variable index at compile-time
 
 getindex :: Eq a => [a] -> a -> Int
-getindex vs x 
-    = case vs of []     -> error "Variable not found"
-                 (y:yr) -> if x == y then 0 else 1 + getindex yr x
+getindex [] x     = error "Variable not found"
+getindex (y:yr) x = if x == y then 0 else 1 + getindex yr x
 
 -- | Compiling from Expr to TExpr
 
@@ -366,17 +361,15 @@ data RInstr = RCstI Int
 --   in postfix form
 
 reval :: [RInstr] -> [Int] -> Int 
-reval inss stack =
-    case (inss, stack) of 
-        ([], (v:vs))                      -> v 
-        ([], [])                          -> error "reval: no result on stack!"
-        (((RCstI i):insr),  stk)          -> reval insr (i:stk)
-        ((RAdd:insr),       (i2:i1:stkr)) -> reval insr ((i1+i2):stkr)
-        ((RSub:insr),       (i2:i1:stkr)) -> reval insr ((i1-i2):stkr)
-        ((RMul:insr),       (i2:i1:stkr)) -> reval insr ((i1*i2):stkr)
-        ((RDup:insr),       (i1:stkr))    -> reval insr (i1:i1:stkr)
-        ((RSwap:insr),      (i2:i1:stkr)) -> reval insr (i1:i2:stkr)
-        _                                 -> error "reval: too few operands on stack"
+reval [] (v:vs)                 = v 
+reval [] []                     = error "reval: no result on stack!"
+reval ((RCstI i):insr) stk      = reval insr (i:stk)
+reval (RAdd:insr) (i2:i1:stkr)  = reval insr ((i1+i2):stkr)
+reval (RSub:insr) (i2:i1:stkr)  = reval insr ((i1-i2):stkr)
+reval (RMul:insr) (i2:i1:stkr)  = reval insr ((i1*i2):stkr)
+reval (RDup:insr) (i1:stkr)     = reval insr (i1:i1:stkr)
+reval (RSwap:insr) (i2:i1:stkr) = reval insr (i1:i2:stkr)
+reval _ _                       = error "reval: too few operands on stack"
         
 -- | Compilation of a variable-free expression to a RInstr list
 
@@ -406,18 +399,16 @@ data SInstr = SCstI Int     -- push integer
 
 
 seval :: [SInstr] -> [Int] -> Int 
-seval inss stack =
-    case (inss, stack) of 
-        ([], (v:vs))                      -> v 
-        ([], [])                          -> error "seval: no result on stack!"
-        (((SCstI i):insr),  stk)          -> seval insr (i:stk)
-        (((SVar i):insr),   stk)          -> seval insr ((stk !! i):stk)
-        ((SAdd:insr),       (i2:i1:stkr)) -> seval insr ((i1+i2):stkr)
-        ((SSub:insr),       (i2:i1:stkr)) -> seval insr ((i1-i2):stkr)
-        ((SMul:insr),       (i2:i1:stkr)) -> seval insr ((i1*i2):stkr)
-        ((SPop:insr),       (_:stkr))     -> seval insr stkr
-        ((SSwap:insr),      (i2:i1:stkr)) -> seval insr (i1:i2:stkr)
-        _                                 -> error "seval: too few operands on stack"
+seval [] (v:vs)                 = v 
+seval [] []                     = error "seval: no result on stack!"
+seval ((SCstI i):insr) stk      = seval insr (i:stk)
+seval ((SVar i):insr)  stk      = seval insr ((stk !! i):stk)
+seval (SAdd:insr)  (i2:i1:stkr) = seval insr ((i1+i2):stkr)
+seval (SSub:insr)  (i2:i1:stkr) = seval insr ((i1-i2):stkr)
+seval (SMul:insr)  (i2:i1:stkr) = seval insr ((i1*i2):stkr)
+seval (SPop:insr)  (_:stkr)     = seval insr stkr
+seval (SSwap:insr) (i2:i1:stkr) = seval insr (i1:i2:stkr)
+seval _ _                       = error "seval: too few operands on stack"
         
 
 -- | A compile-time variable environment representing the state of
