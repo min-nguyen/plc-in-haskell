@@ -1,5 +1,5 @@
 {
-module UsqlLex (  usqlLexer
+module FunLex (   funLexer
                 , Token(..)) where 
 }
 
@@ -18,19 +18,18 @@ tokens :-
     $digit+                                     { \s -> TokenNum (read s)  }
     (\<\>|\<\=|\>\=)                            { \s -> let (x:y:ys) = s in operator [x,y]}
     (\+|\-|\*|\/|\%|\>|\<|\=)                   { \s -> operator ([head s])  }
-    (\(|\)|\,|\.)                               { \s -> delimiter ([head s]) }
-    let                                         { \s -> TokenLet }
-    \-\- $graphic "\n"                          ;
-    @string                                     { \s -> TokenString s}
-    in                                          { \s -> TokenIn }
-    and                                         { \s -> TokenAnd}
+    (\(|\))                                     { \s -> delimiter ([head s]) }
+    \(\* $printable \*\)                        ;
+    else                                        { \s -> TokenElse }
+    end                                         { \s -> TokenEnd }
     false                                       { \s -> TokenBool False}
     true                                        { \s -> TokenBool True}
-    select                                      { \s -> TokenSelect}
-    or                                          { \s -> TokenOr}
-    where                                       { \s -> TokenWhere}
-    from                                        { \s -> TokenFrom}
+    if                                          { \s -> TokenIf }
+    in                                          { \s -> TokenIn }
+    let                                         { \s -> TokenLet }
     not                                         { \s -> TokenNot}
+    then                                        { \s -> TokenThen }
+    eof                                         { \s -> TokenEOF }
     $alpha [$alphanum]*                         { \s -> TokenName s }
 
 {
@@ -52,12 +51,16 @@ operator c = case c of "+"   -> TokenAdd
 delimiter :: String -> Token 
 delimiter c = case c of "("   -> TokenLPar
                         ")"   -> TokenRPar 
-                        ","   -> TokenComma
-                        "."   -> TokenDot 
 
 data Token  = TokenLet 
             | TokenIn 
+            | TokenIf 
+            | TokenElse 
+            | TokenBool Bool 
+            | TokenNot 
             | TokenEnd 
+            | TokenEOF
+            | TokenThen
             | TokenName String
             | TokenNum Int
             | TokenAdd
@@ -73,18 +76,8 @@ data Token  = TokenLet
             | TokenLT 
             | TokenGE 
             | TokenLE 
-            | TokenDot 
-            | TokenComma 
-            | TokenString String
-            | TokenAnd 
-            | TokenBool Bool
-            | TokenOr 
-            | TokenFrom 
-            | TokenSelect 
-            | TokenWhere
-            | TokenNot
             deriving (Show, Eq)
 
-usqlLexer :: String -> [Token]
-usqlLexer s = alexScanTokens s
+funLexer :: String -> [Token]
+funLexer s = alexScanTokens s
 }

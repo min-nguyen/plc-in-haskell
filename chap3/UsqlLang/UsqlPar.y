@@ -22,7 +22,7 @@ import UsqlLex
         name    { TokenName $$          }
         string  { TokenString $$        }
         select  { TokenSelect           }
-        "=="    { TokenEq               }
+        '='     { TokenEq               }
         '+'     { TokenAdd              }
         '-'     { TokenSub              }
         '/'     { TokenDiv              }
@@ -60,7 +60,7 @@ Expr    : Column                        { ColumnExpr $1         }
         | Expr '*' Expr                 { Prim "*" [$1, $3]     }
         | Expr '/' Expr                 { Prim "/" [$1, $3]     }
         | Expr '%' Expr                 { Prim "%" [$1, $3]     }
-        | Expr "==" Expr                { Prim "==" [$1, $3]    }
+        | Expr '=' Expr                 { Prim "==" [$1, $3]    }
         | Expr "<>" Expr                { Prim "<>" [$1, $3]    }
         | Expr '>' Expr                 { Prim ">" [$1, $3]     }
         | Expr '<' Expr                 { Prim "<" [$1, $3]     }

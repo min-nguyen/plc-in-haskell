@@ -29,7 +29,7 @@ happyExpList = Happy_Data_Array.listArray (0,151) ([0,32,0,2048,0,0,0,49152,1138
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_usqlParser","Main","Stmt","Names1","Column","Expr","Exprs","Exprs1","Const","and","false","true","or","not","from","where","num","name","string","select","\"==\"","'+'","'-'","'/'","'%'","'*'","\"<>\"","'<'","'>'","\">=\"","\"<=\"","'('","')'","','","'.'","%eof"]
+  where token_strs = ["error","%dummy","%start_usqlParser","Main","Stmt","Names1","Column","Expr","Exprs","Exprs1","Const","and","false","true","or","not","from","where","num","name","string","select","'='","'+'","'-'","'/'","'%'","'*'","\"<>\"","'<'","'>'","\">=\"","\"<=\"","'('","')'","','","'.'","%eof"]
         bit_start = st * 38
         bit_end = (st + 1) * 38
         read_bit = readArrayBit happyExpList
