@@ -3,6 +3,7 @@ module Fun where
 
 import Absyn
 import Prelude hiding (lookup)
+
 {- Environment operations -}
 
 type Env a = [(String, a)]
