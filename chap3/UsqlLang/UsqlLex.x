@@ -19,19 +19,18 @@ tokens :-
     (\<\>|\<\=|\>\=)                            { \s -> let (x:y:ys) = s in operator [x,y]}
     (\+|\-|\*|\/|\%|\>|\<|\=)                   { \s -> operator ([head s])  }
     (\(|\)|\,|\.)                               { \s -> delimiter ([head s]) }
-    let                                         { \s -> TokenLet }
     \-\- $graphic "\n"                          ;
     @string                                     { \s -> TokenString s}
-    in                                          { \s -> TokenIn }
-    and                                         { \s -> TokenAnd}
+    IN                                          { \s -> TokenIn }
+    AND                                         { \s -> TokenAnd}
     false                                       { \s -> TokenBool False}
     true                                        { \s -> TokenBool True}
-    select                                      { \s -> TokenSelect}
-    or                                          { \s -> TokenOr}
-    where                                       { \s -> TokenWhere}
-    from                                        { \s -> TokenFrom}
-    not                                         { \s -> TokenNot}
-    $alpha [$alphanum]*                         { \s -> TokenName s }
+    SELECT                                      { \s -> TokenSelect}
+    OR                                          { \s -> TokenOr}
+    WHERE                                       { \s -> TokenWhere}
+    FROM                                        { \s -> TokenFrom}
+    NOT                                         { \s -> TokenNot}
+    $alpha [$alphanum \_]*                      { \s -> TokenName s }
 
 {
 
@@ -55,8 +54,7 @@ delimiter c = case c of "("   -> TokenLPar
                         ","   -> TokenComma
                         "."   -> TokenDot 
 
-data Token  = TokenLet 
-            | TokenIn 
+data Token  = TokenIn 
             | TokenEnd 
             | TokenName String
             | TokenNum Int
