@@ -1,0 +1,367 @@
+
+%       dvips -ta4 exercise01 -o
+%       ps2pdf -sPAPERSIZE=a4 exercise01.ps
+
+\documentclass[a4paper]{article}
+\usepackage{times,fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bprd}
+\usepackage[dvips]{graphicx}
+\usepackage{xcolor}
+ 
+\setcounter{exercise-sheet}{1}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
+Monday 24 August 2009}\\[1ex]
+{\small Last update 2009-08-21}\\[2ex]
+\end{center}
+
+\subsection*{Goal of the exercises}
+
+The goal of this week's exercises is to make sure that you have a good
+understanding of functional programming with algebraic datatypes,
+pattern matching and recursive functions.  This is a necessary basis
+for the rest of the course.  Also, you should know how to use these
+concepts for representing and processing expressions in the form of
+abstract syntax trees.
+
+% The following abbreviations are used in exercise sheets:
+
+% \begin{itemize}
+% \item ``Mogensen'' means Torben Mogensen: \emph{Basics of Compiler
+%     Design, Extended edition}, DIKU, University of Copenhagen and
+%   \texttt{lulu.com}, May 2009.
+  
+% \item ``Syme'' means Don Syme, Adam Granicz and Antonio Cisternino:
+%   \emph{Expert F\#}, Apress 2007.
+  
+% \item ``PLCSD'' means Peter Sestoft: \emph{Programming Language
+%     Concepts for Software Developers}, draft manuscript, IT University
+%   2009.
+% \end{itemize}
+
+% \noindent
+
+The exercises let you try yourself the ideas and concepts that were
+introduced in the lectures.  Some exercises may be challenging, but
+they are not supposed to require days of work.  If you get stuck,
+please use the course newsgroup \texttt{it-c.courses.BPRD} to ask for
+help.
+
+It is recommended that you solve
+Exercises~\ref{exer-fsharp-functions}, \ref{exer-expr-more-if},
+\ref{exer-aexpr-datatype} and \ref{exer-datatype-java}, and hand in
+the solutions.  If you solve more exercises, you are welcome to hand
+in those solutions also.
+
+
+\subsection*{Do this first}
+
+At the time of writing, the most recent version of F\# is the May 2009
+Community Technology Preview (CTP), available from
+http://msdn.microsoft.com/fsharp/.  If you are using VS2008, you are
+advised to download and install this version of F\#, because the rest
+of the course (especially the lexing and parsing part) will rely on
+it.
+
+Note that Appendix A of the course lecture notes (see course website)
+contains information on F\# that may be valuable when doing these
+exercises.
+
+
+
+\begin{exercise}\label{exer-fsharp-functions}
+  Define the following functions in Haskell: {\color{red}{This exercise isn't in the book, but I've translated the questions and the answers anyway.}}
+
+\begin{itemize}
+\item A function \texttt{max2 ::\ Int -> Int -> Int} that returns the
+  largest of its two integer arguments.  For instance, \texttt{max2 99
+    3} should give 99.
+  
+\item A function \texttt{max3 ::\ Int -> Int -> Int -> Int} that returns
+  the largest of its three integer arguments.
+  
+\item A function \texttt{isPositive ::\ [Int] -> Bool} so that
+  \texttt{isPositive xs} returns true if all elements of \texttt{xs}
+  are greater than 0, and false otherwise.
+  
+\item A function \texttt{isSorted ::\ [Int] -> Bool} so that
+  \texttt{isSorted xs} returns true if the elements of \texttt{xs}
+  appear sorted in non-decreasing order, and false otherwise.  For
+  instance, the list \texttt{[11, 12, 12]} is sorted, but \texttt{[12,
+    11, 12]} is not.  Note that the empty list \texttt{[]} and any
+  one-element list such as \texttt{[23]} are sorted.
+  
+\item A function \texttt{count ::\ IntTree -> Int} that counts the
+  number of internal nodes (\texttt{Br} constructors) in an
+  \texttt{IntTree}, where the type \texttt{IntTree} is defined by:
+  {\codesetup\begin{verbatim}
+    data IntTree = Br Int IntTree IntTree | Lf \end{verbatim}}
+  That is, \texttt{count (Br 37 (Br 117
+    Lf Lf) (Br 42 Lf Lf))} should give 3, and \texttt{count Lf}
+  should give 0.
+  
+\item A function \texttt{depth ::\ IntTree -> Int} that measures the
+  depth of an \texttt{IntTree}, that is, the maximal number of
+  internal nodes (\texttt{Br} constructors) on a path from the root to
+  a leaf.  For instance, \texttt{depth (Br 37 (Br 117
+    Lf Lf) (Br 42 Lf Lf))} should give 2, and \texttt{depth Lf} should give
+  0.
+\end{itemize}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-expr-more-if}
+(i) File \texttt{Intro2.hs} on the course homepage contains a definition
+of the lecture's \texttt{expr} expression language and an evaluation
+function \texttt{eval}.  Extend the \texttt{eval} function to handle
+three additional operators: \texttt{"max"}, \texttt{"min"}, and
+\texttt{"=="}.  Like the existing operators, they take two argument
+expressions.  The
+equals operator should return 1 when true and 0 when false.\\
+
+\noindent 
+(ii) Write some example expressions in this extended expression
+language, using abstract syntax, and evaluate them using your new
+\texttt{eval} function.\\
+
+\noindent
+(iii) Rewrite one of the \texttt{eval} functions to evaluate the
+arguments of a primitive before branching out on the operator, in this
+style:
+
+{\codesetup\begin{verbatim}
+eval :: Expr -> [(String, Int)] -> Int 
+eval (CstI i) env   = ...
+eval (Var x)  env   = ...
+eval (Prim op e1 e2) env 
+    = let i1 = ...
+          i2 = ...
+      in case op of
+             "+" -> i1 + i2 
+             ...
+\end{verbatim}}
+
+\noindent
+(iv) Extend the expression language with conditional expressions
+\texttt{If e1 e2 e3} corresponding to Haskell's conditional expression \texttt{if e1
+  then e2 else e3}.
+  
+You need to extend the \texttt{Expr} datatype with a new constructor
+\texttt{If} that takes three \texttt{Expr} arguments.\\
+
+\noindent
+(v) Extend the interpreter function \texttt{eval} correspondingly.  It
+should evaluate \texttt{e1}, and if \texttt{e1} is non-zero, then
+evaluate \texttt{e2}, else evaluate \texttt{e3}.  You should be able
+to evaluate this expression \texttt{If (Var "a") (CstI 11) (CstI
+  22)} in an environment that binds variable \texttt{a}.
+    
+Note that various strange and non-standard interpretations of the
+conditional expression are possible.  For instance, the interpreter
+might start by testing whether expressions \texttt{e2} and \texttt{e3}
+are syntactically identical, in which case there is no need to
+evaluate \texttt{e1}, only \texttt{e2} (or \texttt{e3}).  Although
+possible, this is rarely useful.
+\end{exercise}
+
+
+
+\begin{exercise}\label{exer-aexpr-datatype}
+  (i) Declare an alternative datatype \texttt{AExpr} for a
+representation of arithmetic expressions without let-bindings.  The
+datatype should have constructors \texttt{CstI}, \texttt{Var},
+\texttt{Add}, \texttt{Mul}, \texttt{Sub}, for constants, variables,
+addition, multiplication, and subtraction.
+  
+The idea is that we can represent $x*(y+3)$ as \texttt{Mul (Var "x")
+  (Add (Var "y") (CstI 3))} instead of \texttt{Prim "*" (Var "x")
+  (Prim "+" (Var "y") (CstI 3))}.\\
+
+\noindent
+(ii) Write the representation of the expressions $v-(w+z)$ and
+$2*(v-(w+z))$ and $x+y+z+v$.\\
+
+\noindent
+(iii) Write a Haskell function \texttt{fmt ::\ AExpr -> String } to format
+expressions as strings.  For instance, it may format \texttt{Sub (Var
+  "x") (CstI 34)} as the string \texttt{"(x - 34)"}.  It has very much
+the same structure as an \texttt{eval} function, but takes no
+environment argument (because the \emph{name} of a variable is
+independent of its \emph{value}).\\
+
+\noindent
+(iv) Write a Haskell function \texttt{simplify ::\ AExpr -> AExpr} to
+perform expression simplification.  For instance, it should simplify
+$(x+0)$ to $x$, and simplify $(1+0)$ to $1$.  The more ambitious
+student may want to simplify $(1+0)*(x+0)$ to $x$.  Hint 1: Pattern
+matching is your friend.  Hint 2: Don't forget the case where you
+cannot simplify anything.
+
+You might consider the following simplifications, plus any others you
+find useful and correct:
+
+\begin{displaymath}
+  \begin{array}{lcl}\hline\hline
+    0 + e & \longrightarrow & e\\
+    e + 0 & \longrightarrow & e\\
+    e - 0 & \longrightarrow & e\\
+    1 * e & \longrightarrow & e\\
+    e * 1 & \longrightarrow & e\\
+    0 * e & \longrightarrow & 0\\
+    e * 0 & \longrightarrow & 0\\
+    e - e & \longrightarrow & 0\\\hline\hline
+  \end{array}
+\end{displaymath}
+
+\noindent
+(v) [Only for people with fond recollections of differential
+calculus].  Write a Haskell function to perform symbolic differentiation
+of simple arithmetic expressions (such as \texttt{AExpr}) with respect
+to a single variable.\\
+\end{exercise}
+
+
+
+\begin{exercise}\label{exer-better-fmt}
+  Write a version of the formatting function \texttt{fmt} from the
+preceding exercise that avoids producing excess parentheses.  \\
+
+\noindent For instance,
+
+{\codesetup\begin{verbatim}
+   Mul (Sub (Var "a") (Var "b")) (Var "c")
+\end{verbatim}}
+
+\noindent    
+should be formatted as \texttt{"(a-b)*c"} instead of
+\texttt{"((a-b)*c)"}, whereas
+
+{\codesetup\begin{verbatim}
+   Sub (Mul (Var "a") (Var "b")) (Var "c")
+\end{verbatim}}
+    
+\noindent    
+should be formatted as \texttt{"a*b-c"} instead of
+\texttt{"((a*b)-c)"}. \\
+
+\noindent Also, it should be taken into account that
+operators associate to the left, so that
+
+{\codesetup\begin{verbatim}
+   Sub (Sub (Var "a") (Var "b")) (Var "c") 
+\end{verbatim}}
+
+\noindent    
+is formatted as \texttt{"a-b-c"} whereas
+
+{\codesetup\begin{verbatim}
+   Sub (Var "a") (Sub (Var "b") (Var "c"))
+\end{verbatim}}
+
+\noindent    
+is formatted as \texttt{"a-(b-c)"}.\\
+   
+\noindent Hint: This can be achieved by declaring the formatting function to
+take an extra parameter \texttt{pre} that indicates the precedence or
+binding strength of the context.  The new formatting function then has
+type \texttt{fmt ::\ AExpr -> Int -> String}.
+  
+Higher precedence means stronger binding.  When the top-most operator
+of an expression to be formatted has higher precedence than the
+context, there is no need for parentheses around the expression.  A
+left associative operator of precedence 6, such as minus (\texttt{-}),
+provides context precedence 5 to its left argument, and context
+precedence 6 to its right argument.
+
+As a consequence, \texttt{Sub (Var "a") (Sub (Var "b") (Var "c"))} will be
+parenthesized \texttt{a - (b - c)} but \texttt{Sub (Sub (Var "a") (Var "b")) (Var "c")} will be parenthesized \texttt{a - b - c}.
+\end{exercise}
+
+
+\begin{exercise}\label{exer-datatype-java}
+{\color{red}{This exercise uses Java/C\# - I haven't translated this as I'm unsure whether the exercise is necessary.}}  
+Lecture 1 shows how to represent abstract syntax in functional
+languages such as F\# (using algebraic datatypes) and in
+object-oriented languages such as Java or C\# 
+(using a class hierarchy and composites).\\
+
+\noindent
+(1) Use Java (or C\#) classes and methods to do what we have done
+using the F\# datatype \texttt{aexpr} in the preceding exercises.
+Design a class hierarchy to represent arithmetic expressions: it could
+have an abstract class \texttt{Expr} with subclasses \texttt{CstI},
+\texttt{Var}, and \texttt{Binop}, where the latter is itself abstract
+and has concrete subclasses \texttt{Add}, \texttt{Mul} and
+\texttt{Sub}\@.  All classes should implement the \texttt{toString()}
+method to format an expression as a \texttt{String}.
+
+The classes may be used to build an expression in abstract syntax, and
+then print it, as follows:
+
+{\codesetup\begin{verbatim}
+   Expr e = new Add(new CstI(17), new Var("z"));
+   System.out.println(e.toString());
+\end{verbatim}}
+
+\noindent
+(ii) Create three more expressions in abstract syntax and print them.\\
+
+\noindent
+(iii) Extend your classes with facilities to evaluate the arithmetic
+expressions, that is, add a method \texttt{int eval(env)}.
+
+\end{exercise}
+\end{document}
+
+
+
+
+The class
+declarations may look like this:
+
+{\codesetup\begin{verbatim}
+   abstract class Expr { 
+     abstract public String toString();
+   }
+   
+   class CstI extends Expr { 
+     protected final int i;
+   
+     public CstI(int i) { 
+       this.i = i; 
+     }
+   
+     public String toString() { ... } 
+   }
+   
+   class Var extends Expr { 
+     protected final String name;
+   
+     public Var(String name) { 
+       this.name = name; 
+     }
+   
+     public String toString() { ... } 
+   }
+   
+   abstract class Binop extends Expr { 
+     protected final String oper;
+     protected final Expr e1, e2;
+   
+     public Binop(String oper, Expr e1, Expr e2) { 
+       this.oper = oper; this.e1 = e1; this.e2 = e2;
+     }
+   
+     public String toString() { ... } 
+   }
+   
+   class Add extends Binop { ... }   
+   class Mul extends Binop { ... }    
+   class Sub extends Binop { ... }    
+   class Div extends Binop { ... }    
+\end{verbatim}}

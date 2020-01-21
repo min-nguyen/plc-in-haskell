@@ -1,0 +1,371 @@
+%       dvips -ta4 exercise02 -o
+%       ps2pdf -sPAPERSIZE=a4 exercise02.ps
+
+\documentclass[a4paper]{article}
+\usepackage{times,fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bprd}
+\usepackage[dvips]{graphicx}
+\usepackage{xcolor}
+
+\setcounter{exercise-sheet}{2}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
+Monday 31 August 2009}\\[1ex]
+% {\small 2009-08-28}\\[2ex]
+\end{center}
+
+\subsection*{Goal of the exercises}
+
+The goal of this week's exercises is (1) to better understand Haskell
+polymorphic types and functions, and the use of accumulating
+parameters; and (2) to understand the compilation and evaluation of
+simple arithmetic expressions with variables and let-bindings.
+
+
+\noindent 
+It is recommended that you hand in solutions to
+Exercises~\ref{exer-tree-traversal}, \ref{exer-multi-let-eval},
+\ref{exer-multi-let-closed}, \ref{exer-comp-expr-to-ints}, and
+\ref{exer-simultaneous-let} after the exercise classes.  
+
+
+\begin{exercise}\label{exer-right-linear}
+  Define an Haskell function \texttt{linear ::\ Int -> Tree Int} so that
+  \texttt{linear $n$} produces a right-linear tree with $n$ nodes.
+  For instance, \texttt{linear 0} should produce \texttt{Lf}, and
+  \texttt{linear 2} should produce \texttt{Br 2 Lf (Br 1 Lf Lf)}.  The definition
+  of \texttt{Tree} is given below.
+{\codesetup\begin{verbatim}
+   data Tree a = Br a (Tree a) (Tree a) | Lf
+\end{verbatim}}
+\noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+   linear :: Int -> Tree Int
+   linear n = if n == 0
+              then Lf 
+              else Br n Lf (linear (n-1))
+\end{verbatim}}
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-tree-traversal}
+  Lecture 2 presents an Haskell function \texttt{preorder1 ::\ Tree a ->
+    [a]} that returns a list of the node values in a tree, in
+  \emph{preorder} (root before left subtree before right subtree).
+  
+  Now define a function \texttt{inorder} that returns the node values
+  in \emph{inorder} (left subtree before root before right subtree)
+  and a function \texttt{postorder} that returns the node values in
+  \emph{postorder} (left subtree before right subtree before root):\\
+  
+\noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+   inorder   : Tree a -> [a]
+   inorder Lf = []
+   inorder (Br x l r) = inorder l ++ [x] ++ inorder r
+   
+   postorder : Tree a -> [a]
+   postorder Lf = []
+   postorder (Br x l r) = postorder l ++ postorder r ++ [x]
+\end{verbatim}}
+
+\noindent 
+Finally, define a more efficient version of \texttt{inorder} that
+  uses an auxiliary function \texttt{ino ::\ Tree a -> [a] -> [a]
+    } with an accumulating parameter; and similarly for
+  \texttt{postorder}.  \\
+  
+  \noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+   inorder   : Tree a -> [a]
+   inorder Lf = []
+   inorder (Br x l r) = inorder l ++ [x] ++ inorder r
+   
+   postorder : Tree a -> [a]
+   postorder Lf = []
+   postorder (Br x l r) = postorder l ++ postorder r ++ [x]
+\end{verbatim}}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-multi-let-eval}
+  Extend the expression language \texttt{Expr} from \texttt{Intcomp1.hs}
+  with multiple \emph{sequential} let-bindings, such as this (in
+  concrete syntax):
+
+{\codesetup\begin{verbatim}
+   let x1 = 5+7   x2 = x1*2 in x1+x2 end
+\end{verbatim}}
+
+\noindent
+\textbf{\emph{Answer}}\\
+An example solution for \texttt{Expr} is: 
+
+{\codesetup\begin{verbatim}
+   data Expr = 
+     | CstI Int
+     | Var String
+     | Let [(String, Expr)] Expr    
+     | Prim String Expr Expr
+     deriving Show
+\end{verbatim}}
+
+\noindent 
+so that the \texttt{Let} constructor takes a list of bindings, where a
+binding is a pair of a variable name and an expression.  The example
+above would be represented as:
+
+{\codesetup\begin{verbatim}
+   Let [("x1", ...), ("x2", ...)] (Prim "+" (Var "x1") (Var "x2"))
+\end{verbatim}}
+
+\vspace{0.3cm}
+\noindent 
+Revise the \texttt{eval} interpreter from \texttt{Intcomp1.hs} to work
+for the \texttt{Expr} language extended with multiple sequential
+let-bindings.  \\
+
+\noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+   eval :: Expr -> [(String, Int)] -> Int 
+   eval (Let xs ebody) env
+       = let env1 = foldl f env xs
+         in  eval ebody env1
+         where f env' (x, xexpr) = let xval = eval xexpr env'
+                                   in  ((x, xval):env')
+\end{verbatim}}
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-multi-let-closed}
+  Revise the function \texttt{freevars ::\ Expr -> [String]} to work
+  for the language as extended in Exercise~\ref{exer-multi-let-eval}.
+  Note that the example expression in the beginning of
+  Exercise~\ref{exer-multi-let-eval} has no free variables, but
+  \texttt{let x1 = x1+7 in x1+8 end} has the free variable
+  \texttt{x1}, because the variable \texttt{x1} is bound only in the
+  body (\texttt{x1+8}), not in the right-hand side (\texttt{x1+7}), of
+  its own binding.  (There \emph{are} programming languages where a
+  variable can be used in the right-hand side of its own binding, but
+  this is not such a language.)\\
+  
+\noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+  freevars :: Expr -> [String]
+  freevars (CstI i) = []
+  freevars (Var x)  = [x]
+  freevars (Let xs ebody) 
+      = foldr f (freevars ebody) xs 
+      where f (x, erhs) freevars'  = union (freevars erhs, minus (freevars', [x]))
+  freevars (Prim op e1 e2) 
+      = union (freevars e1, freevars e2)
+\end{verbatim}}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-multi-let-tcomp}
+  Revise the \texttt{Expr}-to-\texttt{TExpr} compiler \texttt{tcomp ::\ 
+    Expr -> TExpr} from \texttt{Intcomp1.fs} to work for the extended
+  \texttt{Expr} language.
+  There is no need to modify the \texttt{TExpr} language or the
+  \texttt{teval} interpreter to accommodate multiple sequential
+  let-bindings.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+  tcomp :: Expr -> [String] -> TExpr 
+  tcomp (CstI i) cenv = TCstI i
+  tcomp (Var x) cenv = TVar (getindex cenv x)
+  tcomp (Let xs ebody) cenv
+      = case xs of []              -> tcomp ebody cenv 
+                   ((x, erhs):xs') -> let cenv1 = (x:cenv)
+                                      in  TLet (tcomp erhs cenv) (tcomp (Let xs' ebody) cenv1)
+  tcomp (Prim op e1 e2) cenv
+      = TPrim op (tcomp e1 cenv) (tcomp e2 cenv)
+\end{verbatim}}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-comp-expr-to-ints}
+  Write a bytecode assembler (in Haskell) that translates a list
+  of bytecode instructions for the simple stack machine in
+  \texttt{Intcomp1.fs} into a list of integers.  The integers should be
+  the corresponding bytecodes as seen below.
+  {\codesetup\begin{verbatim}
+  SCST = 0, SVAR = 1, SADD = 2, SSUB = 3, SMUL = 4, SPOP = 5, SSWAP = 6;\end{verbatim}}
+  \noindent 
+  Thus you should write a function
+  \texttt{assemble ::\ [SInstr] -> [Int]}.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  assemble :: [SInstr] -> [Int]
+  assemble [] = []
+  assemble (x:xs) 
+    = let xs' = assemble xs 
+      in case x of SCstI i -> (0:i:xs')
+                   SVar  i -> (1:i:xs')
+                   SAdd    -> (2:xs')
+                   SSub    -> (3:xs')
+                   SMul    -> (4:xs')
+                   SPop    -> (5:xs')
+                   SSwap   -> (6:xs')
+  \end{verbatim}}
+
+  Use this function together with \texttt{scomp} from
+  \texttt{Intcomp1.hs} to make a compiler from the original expressions
+  language \texttt{Expr} to a list of bytecodes \texttt{[Int]}.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  scompeval :: Expr -> [StackValue] -> [Int]
+  scompeval x = assemble . scomp x
+  \end{verbatim}}
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-read-ints-into-stack-machine}
+  Modify the compiler from Exercise~\ref{exer-comp-expr-to-ints} to
+  write the lists of integers to a file.  A list \texttt{inss} of
+  integers may be output to the file called \texttt{fname} using this
+  function (found in \texttt{Intcomp1.hs}):
+
+{\codesetup\begin{verbatim}
+   intsToFile :: [Int] -> String -> IO ()
+   intsToFile inss fname 
+    = do let text = intercalate " " (map show inss)
+         writeFile fname text
+\end{verbatim}}
+\noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  scompeval :: Expr -> [StackValue] -> IO ()
+  scompeval x = flip intsToFile "fname" . assemble . scomp x
+  \end{verbatim}}
+
+\noindent
+Then modify the stack machine interpreter in \texttt{Machine.java} to
+read the sequence of integers from a text file, and execute it as a
+stack machine program.  The name of the textfile may be given as a
+command-line parameter to the Java program.  Reading from the text
+file may be done using the StringTokenizer class or StreamTokenizer
+class; see e.g. \emph{Java Precisely} Example~145.
+  
+It is essential that the compiler (in F\#) and the interpreter (in
+Java) agree on the intermediate language: what integer represents what
+instruction.\\
+
+\noindent
+\textbf{\emph{Answer }}
+{\color{red}{This second part of the exercise requires the student to modify the file Machine.java, so I haven't translated this answer.}} 
+\end{exercise}
+
+
+\begin{exercise}\label{exer-simultaneous-let}
+  
+  Now modify the interpretation of the language from
+  Exercise~\ref{exer-multi-let-eval} so that multiple let-bindings are
+  \emph{simultaneous} rather than sequential.  For instance,
+
+{\codesetup\begin{verbatim}
+   let x1 = 5+7   x2 = x1*2 in x1+x2 end
+\end{verbatim}}
+
+\noindent
+should still have the abstract syntax 
+
+{\codesetup\begin{verbatim}
+   Let [("x1", ...); ("x2", ...)] (Prim "+" (Var "x1") (Var "x2"))
+\end{verbatim}}
+
+\noindent 
+but now the interpretation is that all right-hand sides must be
+evaluated before any left-hand side variable gets bound to its
+right-hand side value.  That is, in the above expression, the
+occurrence of \texttt{x1} in the right-hand side of \texttt{x2} has
+nothing to do with the \texttt{x1} of the first binding; it is a free
+variable.
+
+Revise the \texttt{eval} interpreter to work for this version of the
+\texttt{Expr} language.  The idea is that all the right-hand side
+expressions should be evaluated, after which all the variables are
+bound to those values simultaneously.  Hence
+
+{\codesetup\begin{verbatim}
+   let x = 11 in let x = 22  y = x+1 in x+y end end 
+\end{verbatim}}
+
+\noindent 
+should compute \texttt{12 + 22} because \texttt{x} in \texttt{x+1} is
+the outer \texttt{x} (and hence is 11), and \texttt{x} in \texttt{x+y}
+is the inner \texttt{x} (and hence is 22).  In other words, in the
+let-binding
+
+{\codesetup\begin{verbatim}
+   let x1 = e1  ...  xn = en in e end
+\end{verbatim}}
+
+\noindent 
+the scope of the variables \texttt{x1 \ldots\ xn} should be
+\texttt{e}, not \texttt{e1 \ldots\ en}.  
+\end{exercise}
+\noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+   eval :: Expr -> [(String, Int)] -> Int 
+   eval (Let xs ebody) env
+       = let (env1, _) = foldl f (env, env) xs
+         in  eval ebody env1
+         where f (env', env) (x, xexpr) = let xval = eval xexpr env
+                                          in  ((x, xval):env'), env)
+\end{verbatim}}
+
+\begin{exercise} 
+Define a version of the (naive) Fibonacci function 
+
+{\codesetup\begin{verbatim}
+   fib :: Int -> Int
+   fib n = if n < 2 
+           then n 
+           else fib (n-1) + fib (n-2)
+\end{verbatim}}
+
+
+\noindent 
+in Postscript\@.  Compute Fibonacci of $0, 1, \ldots, 25$.  \\
+
+\noindent
+\textbf{\emph{Answer}}
+\noindent{\color{red}{I'm unsure about this answer (and using Postscript).}}
+
+\end{exercise}
+
+\begin{exercise}
+  Write a Postscript program to compute the sum $1+2+\cdots+1000$.  It
+  must really do the summation, not use the closed-form expression
+  $\frac{n(n+1)}{2}$ with $n=1000$.  (Trickier: do this using only a
+  \texttt{for}-loop, no function definition).\\
+\end{exercise}
+
+\noindent
+\textbf{\emph{Answer}}
+\noindent{\color{red}{I'm unsure about this answer (and using Postscript).}}
+
+\end{document}
+
