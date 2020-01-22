@@ -25,14 +25,14 @@ import ExprLex
 
 %%
 
-Expr    : var                       { Var  $1           }
-        | num                       { CstI $1           }
-        | '-' num                   { CstI (- $2)       }
-        | '(' Expr ')'              { $2                }
-        | let var '=' Expr in Expr  { Let $2 $4 $6      }
-        | Expr '+' Expr             { Prim "+" $1 $3    }
-        | Expr '-' Expr             { Prim "-" $1 $3    }
-        | Expr '*' Expr             { Prim "*" $1 $3    }
+Expr    : var                          { Var  $1           }
+        | num                          { CstI $1           }
+        | '-' num                      { CstI (- $2)       }
+        | '(' Expr ')'                 { $2                }
+        | let var '=' Expr in Expr end { Let $2 $4 $6      }
+        | Expr '*' Expr                { Prim "*" $1 $3    }
+        | Expr '+' Expr                { Prim "+" $1 $3    }
+        | Expr '-' Expr                { Prim "-" $1 $3    }
         
 {
 

@@ -17,7 +17,6 @@ import UsqlLex
         or      { TokenOr               }
         not     { TokenNot              }
         from    { TokenFrom             }
-        where   { TokenWhere            }
         num     { TokenNum $$           }
         name    { TokenName $$          }
         string  { TokenString $$        }
