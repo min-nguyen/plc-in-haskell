@@ -1,4 +1,3 @@
-{- Programming language concepts for software developers, 2010-08-28 -}  
 
 {- Representing object language expressions using recursive datatypes -}
 

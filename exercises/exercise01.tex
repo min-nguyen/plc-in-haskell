@@ -10,72 +10,74 @@
 \usepackage[dvips]{graphicx}
 \usepackage{xcolor}
  
-\setcounter{exercise-sheet}{1}
+\setcounter{exercise-sheet}{14}
 
 \begin{document}
 
 \begin{center}
-{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
-Monday 24 August 2009}\\[1ex]
-{\small Last update 2009-08-21}\\[2ex]
+{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]}\vspace{1cm}
+%Monday 24 August 2009}\\[1ex]
+%{\small Last update 2009-08-21}\\[2ex]
 \end{center}
 
-\subsection*{Goal of the exercises}
-
-The goal of this week's exercises is to make sure that you have a good
-understanding of functional programming with algebraic datatypes,
-pattern matching and recursive functions.  This is a necessary basis
-for the rest of the course.  Also, you should know how to use these
-concepts for representing and processing expressions in the form of
-abstract syntax trees.
-
-% The following abbreviations are used in exercise sheets:
-
-% \begin{itemize}
-% \item ``Mogensen'' means Torben Mogensen: \emph{Basics of Compiler
-%     Design, Extended edition}, DIKU, University of Copenhagen and
-%   \texttt{lulu.com}, May 2009.
-  
-% \item ``Syme'' means Don Syme, Adam Granicz and Antonio Cisternino:
-%   \emph{Expert F\#}, Apress 2007.
-  
-% \item ``PLCSD'' means Peter Sestoft: \emph{Programming Language
-%     Concepts for Software Developers}, draft manuscript, IT University
-%   2009.
-% \end{itemize}
-
-% \noindent
-
-The exercises let you try yourself the ideas and concepts that were
-introduced in the lectures.  Some exercises may be challenging, but
-they are not supposed to require days of work.  If you get stuck,
-please use the course newsgroup \texttt{it-c.courses.BPRD} to ask for
-help.
-
-It is recommended that you solve
-Exercises~\ref{exer-fsharp-functions}, \ref{exer-expr-more-if},
-\ref{exer-aexpr-datatype} and \ref{exer-datatype-java}, and hand in
-the solutions.  If you solve more exercises, you are welcome to hand
-in those solutions also.
-
-
-\subsection*{Do this first}
-
-At the time of writing, the most recent version of F\# is the May 2009
-Community Technology Preview (CTP), available from
-http://msdn.microsoft.com/fsharp/.  If you are using VS2008, you are
-advised to download and install this version of F\#, because the rest
-of the course (especially the lexing and parsing part) will rely on
-it.
-
-Note that Appendix A of the course lecture notes (see course website)
-contains information on F\# that may be valuable when doing these
-exercises.
+%\subsection*{Goal of the exercises}
+%
+%The goal of this week's exercises is to make sure that you have a good
+%understanding of functional programming with algebraic datatypes,
+%pattern matching and recursive functions.  This is a necessary basis
+%for the rest of the course.  Also, you should know how to use these
+%concepts for representing and processing expressions in the form of
+%abstract syntax trees.
+%
+%% The following abbreviations are used in exercise sheets:
+%
+%% \begin{itemize}
+%% \item ``Mogensen'' means Torben Mogensen: \emph{Basics of Compiler
+%%     Design, Extended edition}, DIKU, University of Copenhagen and
+%%   \texttt{lulu.com}, May 2009.
+%  
+%% \item ``Syme'' means Don Syme, Adam Granicz and Antonio Cisternino:
+%%   \emph{Expert F\#}, Apress 2007.
+%  
+%% \item ``PLCSD'' means Peter Sestoft: \emph{Programming Language
+%%     Concepts for Software Developers}, draft manuscript, IT University
+%%   2009.
+%% \end{itemize}
+%
+%% \noindent
+%
+%The exercises let you try yourself the ideas and concepts that were
+%introduced in the lectures.  Some exercises may be challenging, but
+%they are not supposed to require days of work.  If you get stuck,
+%please use the course newsgroup \texttt{it-c.courses.BPRD} to ask for
+%help.
+%
+%It is recommended that you solve
+%Exercises~\ref{exer-fsharp-functions}, \ref{exer-expr-more-if},
+%\ref{exer-aexpr-datatype} and \ref{exer-datatype-java}, and hand in
+%the solutions.  If you solve more exercises, you are welcome to hand
+%in those solutions also.
+%
+%
+%\subsection*{Do this first}
+%
+%At the time of writing, the most recent version of F\# is the May 2009
+%Community Technology Preview (CTP), available from
+%http://msdn.microsoft.com/fsharp/.  If you are using VS2008, you are
+%advised to download and install this version of F\#, because the rest
+%of the course (especially the lexing and parsing part) will rely on
+%it.
+%
+%Note that Appendix A of the course lecture notes (see course website)
+%contains information on F\# that may be valuable when doing these
+%exercises.
 
 
 
 \begin{exercise}\label{exer-fsharp-functions}
-  Define the following functions in Haskell: {\color{red}{This exercise isn't in the book, but I've translated the questions and the answers anyway.}}
+(The purpose of this question is to review Haskell programming. If you are confident with Haskell, skip to the next question.)
+
+  Define the following functions in Haskell: 
 
 \begin{itemize}
 \item A function \texttt{max2 ::\ Int -> Int -> Int} that returns the
@@ -218,11 +220,11 @@ find useful and correct:
   \end{array}
 \end{displaymath}
 
-\noindent
-(v) [Only for people with fond recollections of differential
-calculus].  Write a Haskell function to perform symbolic differentiation
-of simple arithmetic expressions (such as \texttt{AExpr}) with respect
-to a single variable.\\
+%\noindent
+%(v) [Only for people with fond recollections of differential
+%calculus].  Write a Haskell function to perform symbolic differentiation
+%of simple arithmetic expressions (such as \texttt{AExpr}) with respect
+%to a single variable.\\
 \end{exercise}
 
 
@@ -282,6 +284,7 @@ As a consequence, \texttt{Sub (Var "a") (Sub (Var "b") (Var "c"))} will be
 parenthesized \texttt{a - (b - c)} but \texttt{Sub (Sub (Var "a") (Var "b")) (Var "c")} will be parenthesized \texttt{a - b - c}.
 \end{exercise}
 
+\end{document}
 
 \begin{exercise}\label{exer-datatype-java}
 {\color{red}{This exercise uses Java/C\# - I haven't translated this as I'm unsure whether the exercise is necessary.}}  
@@ -316,7 +319,6 @@ then print it, as follows:
 expressions, that is, add a method \texttt{int eval(env)}.
 
 \end{exercise}
-\end{document}
 
 
 
