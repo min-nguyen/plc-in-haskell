@@ -27,7 +27,6 @@ tokens :-
     true                                        { \s -> TokenBool True}
     SELECT                                      { \s -> TokenSelect}
     OR                                          { \s -> TokenOr}
-    WHERE                                       { \s -> TokenWhere}
     FROM                                        { \s -> TokenFrom}
     NOT                                         { \s -> TokenNot}
     $alpha [$alphanum \_]*                      { \s -> TokenName s }
@@ -78,8 +77,7 @@ data Token  = TokenIn
             | TokenBool Bool
             | TokenOr 
             | TokenFrom 
-            | TokenSelect 
-            | TokenWhere
+            | TokenSelect
             | TokenNot
             deriving (Show, Eq)
 
