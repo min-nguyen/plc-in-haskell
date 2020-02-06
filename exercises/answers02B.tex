@@ -1,0 +1,129 @@
+%       dvips -ta4 exercise02 -o
+%       ps2pdf -sPAPERSIZE=a4 exercise02.ps
+
+\documentclass[a4paper]{article}
+\usepackage{times,fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bprd}
+\usepackage[dvips]{graphicx}
+\usepackage{xcolor}
+
+\setcounter{exercise-sheet}{17}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Exercises week \arabic{exercise-sheet}}\\[1ex]
+% {\small 2009-08-28}\\[2ex]
+\end{center}
+
+
+
+
+
+
+
+
+
+
+\begin{exercise}\label{exer-multi-let-tcomp}
+In the last lab, we have extend the expression language \texttt{Expr} from \texttt{Intcomp1.hs}
+  with multiple \emph{sequential} let-bindings, such as this (in
+  concrete syntax):
+
+{\codesetup\begin{verbatim}
+   let x1 = 5+7   x2 = x1*2 in x1+x2 end
+\end{verbatim}}
+
+
+  Revise the \texttt{Expr}-to-\texttt{TExpr} compiler \texttt{tcomp ::\ 
+    Expr -> TExpr} from \texttt{Intcomp1.fs} to work for the extended
+  \texttt{Expr} language.
+  There is no need to modify the \texttt{TExpr} language or the
+  \texttt{teval} interpreter to accommodate multiple sequential
+  let-bindings.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+{\codesetup\begin{verbatim}
+  tcomp :: Expr -> [String] -> TExpr 
+  tcomp (CstI i) cenv = TCstI i
+  tcomp (Var x) cenv = TVar (getindex cenv x)
+  tcomp (Let xs ebody) cenv
+      = case xs of []              -> tcomp ebody cenv 
+                   ((x, erhs):xs') -> let cenv1 = (x:cenv)
+                                      in  TLet (tcomp erhs cenv) (tcomp (Let xs' ebody) cenv1)
+  tcomp (Prim op e1 e2) cenv
+      = TPrim op (tcomp e1 cenv) (tcomp e2 cenv)
+\end{verbatim}}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-comp-expr-to-ints}
+  Write a bytecode assembler (in Haskell) that translates a list
+  of bytecode instructions for the simple stack machine in
+  \texttt{Intcomp1.fs} into a list of integers.  The integers should be
+  the corresponding bytecodes as seen below.
+  {\codesetup\begin{verbatim}
+  SCST = 0, SVAR = 1, SADD = 2, SSUB = 3, SMUL = 4, SPOP = 5, SSWAP = 6;\end{verbatim}}
+  \noindent 
+  Thus you should write a function
+  \texttt{assemble ::\ [SInstr] -> [Int]}.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  assemble :: [SInstr] -> [Int]
+  assemble [] = []
+  assemble (x:xs) 
+    = let xs' = assemble xs 
+      in case x of SCstI i -> (0:i:xs')
+                   SVar  i -> (1:i:xs')
+                   SAdd    -> (2:xs')
+                   SSub    -> (3:xs')
+                   SMul    -> (4:xs')
+                   SPop    -> (5:xs')
+                   SSwap   -> (6:xs')
+  \end{verbatim}}
+
+  Use this function together with \texttt{scomp} from
+  \texttt{Intcomp1.hs} to make a compiler from the original expressions
+  language \texttt{Expr} to a list of bytecodes \texttt{[Int]}.\\
+  
+  \noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  scompeval :: Expr -> [StackValue] -> [Int]
+  scompeval x = assemble . scomp x
+  \end{verbatim}}
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-read-ints-into-stack-machine}
+  Modify the compiler from Exercise~\ref{exer-comp-expr-to-ints} to
+  write the lists of integers to a file.  A list \texttt{inss} of
+  integers may be output to the file called \texttt{fname} using this
+  function (found in \texttt{Intcomp1.hs}):
+
+{\codesetup\begin{verbatim}
+   intsToFile :: [Int] -> String -> IO ()
+   intsToFile inss fname 
+    = do let text = intercalate " " (map show inss)
+         writeFile fname text
+\end{verbatim}}
+\noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  scompeval :: Expr -> [StackValue] -> IO ()
+  scompeval x = flip intsToFile "fname" . assemble . scomp x
+  \end{verbatim}}
+
+\end{exercise}
+
+
+
+
+\end{document}
+

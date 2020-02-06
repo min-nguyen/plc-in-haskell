@@ -9,32 +9,17 @@
 \usepackage[dvips]{graphicx}
 \usepackage{xcolor}
 
-\setcounter{exercise-sheet}{2}
+\setcounter{exercise-sheet}{16}
 
 \begin{document}
 
 \begin{center}
-{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
-Monday 31 August 2009}\\[1ex]
+{\Large\bf Exercises week \arabic{exercise-sheet}}\\[1ex]
 % {\small 2009-08-28}\\[2ex]
 \end{center}
 
-\subsection*{Goal of the exercises}
 
-The goal of this week's exercises is (1) to better understand Haskell
-polymorphic types and functions, and the use of accumulating
-parameters; and (2) to understand the compilation and evaluation of
-simple arithmetic expressions with variables and let-bindings.\\
-
-
-\noindent 
-It is recommended that you hand in solutions to
-Exercises~\ref{exer-tree-traversal}, \ref{exer-multi-let-eval},
-\ref{exer-multi-let-closed}, \ref{exer-comp-expr-to-ints}, and
-\ref{exer-simultaneous-let} after the exercise classes.  \\
-
-
-\begin{exercise}\label{exer-right-linear} {\color{red}{This exercise isn't in the book, but I've translated the questions and the answers anyway.}}
+\begin{exercise}\label{exer-right-linear} 
   Define an Haskell function \texttt{linear ::\ Int -> Tree Int} so that
   \texttt{linear $n$} produces a right-linear tree with $n$ nodes.
   For instance, \texttt{linear 0} should produce \texttt{Lf}, and
@@ -47,8 +32,7 @@ Exercises~\ref{exer-tree-traversal}, \ref{exer-multi-let-eval},
 \end{exercise}
 
 
-\begin{exercise}\label{exer-tree-traversal} {\color{red}{This exercise isn't in the book (nor is the function preorder1), but I've translated the questions and the answers anyway.}}
-  Lecture 2 presents an Haskell function \texttt{preorder1 ::\ Tree a ->
+\begin{exercise}\label{exer-tree-traversal} In the lecture, we have seen an Haskell function \texttt{preorder ::\ Tree a ->
     [a]} that returns a list of the node values in a tree, in
   \emph{preorder} (root before left subtree before right subtree).\\
   
@@ -117,64 +101,6 @@ evaluated and bound to \texttt{x2}, after which the let-body
 \end{exercise}
 
 
-\begin{exercise}\label{exer-multi-let-tcomp}
-  Revise the \texttt{Expr}-to-\texttt{TExpr} compiler \texttt{tcomp ::\ 
-    Expr -> TExpr} from \texttt{Intcomp1.fs} to work for the extended
-  \texttt{Expr} language.
-  There is no need to modify the \texttt{TExpr} language or the
-  \texttt{teval} interpreter to accommodate multiple sequential
-  let-bindings.
-\end{exercise}
-
-
-\begin{exercise}\label{exer-comp-expr-to-ints}
-  {\color{red}{This exercise uses the file Machine.java, but I've managed to translate the question such that the file isn't needed.}}  Write a bytecode assembler (in Haskell) that translates a list
-  of bytecode instructions for the simple stack machine in
-  \texttt{Intcomp1.fs} into a list of integers.  The integers should be
-  the corresponding bytecodes as seen below.
-  {\codesetup\begin{verbatim}
-  SCST = 0, SVAR = 1, SADD = 2, SSUB = 3, SMUL = 4, SPOP = 5, SSWAP = 6;\end{verbatim}}
-  \noindent 
-  Thus you should write a function
-  \texttt{assemble ::\ [SInstr] -> [Int]}.\\
-  
-  Use this function together with \texttt{scomp} from
-  \texttt{Intcomp1.hs} to make a compiler from the original expressions
-  language \texttt{Expr} to a list of bytecodes \texttt{[Int]}.
-  
-  You may test the output of your compiler by typing in the numbers as
-  an \texttt{Int} array in the \texttt{Machine.java} interpreter.  (Or
-  you may solve Exercise~\ref{exer-read-ints-into-stack-machine} below
-  to avoid this manual work).
-\end{exercise}
-
-
-\begin{exercise}\label{exer-read-ints-into-stack-machine}
-  Modify the compiler from Exercise~\ref{exer-comp-expr-to-ints} to
-  write the lists of integers to a file.  A list \texttt{inss} of
-  integers may be output to the file called \texttt{fname} using this
-  function (found in \texttt{Intcomp1.hs}):
-
-{\codesetup\begin{verbatim}
-   intsToFile :: [Int] -> String -> IO ()
-   intsToFile inss fname 
-    = do let text = intercalate " " (map show inss)
-         writeFile fname text
-\end{verbatim}}
-
-\noindent
-{\color{red}{This second part of the exercise requires the student to modify the file Machine.java, so I haven't translated this question.}} Then modify the stack machine interpreter in \texttt{Machine.java} to
-read the sequence of integers from a text file, and execute it as a
-stack machine program.  The name of the textfile may be given as a
-command-line parameter to the Java program.  Reading from the text
-file may be done using the StringTokenizer class or StreamTokenizer
-class; see e.g. \emph{Java Precisely} Example~145.
-  
-It is essential that the compiler (in F\#) and the interpreter (in
-Java) agree on the intermediate language: what integer represents what
-instruction.
-\end{exercise}
-
 
 \begin{exercise}\label{exer-simultaneous-let}
   
@@ -226,26 +152,6 @@ the scope of the variables \texttt{x1 \ldots\ xn} should be
 \end{exercise}
 
 
-\begin{exercise} 
-Define a version of the (naive) Fibonacci function 
-
-{\codesetup\begin{verbatim}
-   fib :: Int -> Int
-   fib n = if n < 2 
-           then n 
-           else fib (n-1) + fib (n-2)
-\end{verbatim}}
-
-\noindent 
-in Postscript\@.  Compute Fibonacci of $0, 1, \ldots, 25$.  
-\end{exercise}
-
-\begin{exercise}
-  Write a Postscript program to compute the sum $1+2+\cdots+1000$.  It
-  must really do the summation, not use the closed-form expression
-  $\frac{n(n+1)}{2}$ with $n=1000$.  (Trickier: do this using only a
-  \texttt{for}-loop, no function definition).
-\end{exercise}
 
 \end{document}
 
