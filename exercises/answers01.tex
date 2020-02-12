@@ -205,8 +205,8 @@ eval (Prim op e1 e2) env
              _   -> error "unknown primitive"
 eval (If e1 then e2 else e3) env
     = if eval e1 != 0
-      then e2
-      else e3
+      then eval e2 env
+      else eval e3 env
 \end{verbatim}}\\
 
 \end{exercise}
