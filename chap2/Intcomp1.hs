@@ -396,7 +396,7 @@ data SInstr = SCstI Int     -- push integer
             | SMul          -- pop args, push product
             | SPop          -- pop value/unbind var
             | SSwap         -- exchange top and next
-
+   deriving Show
 
 seval :: [SInstr] -> [Int] -> Int 
 seval [] (v:vs)                 = v 
