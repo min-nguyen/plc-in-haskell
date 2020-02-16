@@ -71,14 +71,20 @@ Finally, define a more efficient version of \texttt{inorder} that
   \noindent
 \textbf{\emph{Answer}}
 {\codesetup\begin{verbatim}
-   inorder   : Tree a -> [a]
-   inorder Lf = []
-   inorder (Br x l r) = inorder l ++ [x] ++ inorder r
+   inorder :: Tree a -> [a]
+   inorder tree = ino tree []
+   
+   ino :: Tree a -> [a] -> [a]
+   ino Lf xs = xs
+   ino (Br x l r) xs = ino l . (x:) . ino r
    
    postorder : Tree a -> [a]
-   postorder Lf = []
-   postorder (Br x l r) = postorder l ++ postorder r ++ [x]
-\end{verbatim}}
+   postorder tree = posto tree []
+   
+   posto :: Tree a -> [a] -> [a]
+   posto Lf xs = xs
+   posto (Br x l r) = posto l . posto r . (x:)
+{verbatim}}
 \end{exercise}
 
 
