@@ -84,7 +84,7 @@ Finally, define a more efficient version of \texttt{inorder} that
    posto :: Tree a -> [a] -> [a]
    posto Lf xs = xs
    posto (Br x l r) = posto l . posto r . (x:)
-{verbatim}}
+\end{verbatim}}
 \end{exercise}
 
 
