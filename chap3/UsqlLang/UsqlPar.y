@@ -9,6 +9,8 @@ import UsqlLex
 %tokentype  { UsqlLex.Token }
 %error      { parseError }
 
+%left '-' '+' 
+%left '*' '/'
 
 %token  
         and     { TokenAnd              }

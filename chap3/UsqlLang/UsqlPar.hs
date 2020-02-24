@@ -3,12 +3,10 @@ module UsqlPar where
 
 import Absyn
 import UsqlLex
-import qualified Data.Array as Happy_Data_Array
-import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.19.8
+-- parser produced by Happy Version 1.19.5
 
 data HappyAbsSyn t4 t5 t6 t7 t8 t9 t10 t11
 	= HappyTerminal (UsqlLex.Token)
@@ -22,31 +20,14 @@ data HappyAbsSyn t4 t5 t6 t7 t8 t9 t10 t11
 	| HappyAbsSyn10 t10
 	| HappyAbsSyn11 t11
 
-happyExpList :: Happy_Data_Array.Array Int Int
-happyExpList = Happy_Data_Array.listArray (0,154) ([0,16,0,512,0,0,0,22528,32839,0,0,0,0,0,4608,16376,1,8,0,0,0,0,0,0,0,0,18264,128,0,0,0,0,18,0,0,4096,0,45056,142,1,64521,95,0,0,22528,32839,0,64,0,0,0,0,1,32768,1141,8,36528,256,54784,8209,49152,570,4,18264,128,60160,4104,24576,285,2,9132,64,30080,2052,45056,142,1,4566,32,15040,1026,22528,32839,0,2283,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,0,0,0,32768,0,0,0,0,0,0,0,0,16,0,0,0,0
-	])
-
-{-# NOINLINE happyExpListPerState #-}
-happyExpListPerState st =
-    token_strs_expected
-  where token_strs = ["error","%dummy","%start_usqlParser","Main","Stmt","Names1","Column","Expr","Exprs","Exprs1","Const","and","false","true","or","not","from","num","name","string","select","'='","'+'","'-'","'/'","'%'","'*'","\"<>\"","'<'","'>'","\">=\"","\"<=\"","'('","')'","','","'.'","%eof"]
-        bit_start = st * 37
-        bit_end = (st + 1) * 37
-        read_bit = readArrayBit happyExpList
-        bits = map read_bit [bit_start..bit_end - 1]
-        bits_indexed = zip bits [0..36]
-        token_strs_expected = concatMap f bits_indexed
-        f (False, _) = []
-        f (True, nr) = [token_strs !! nr]
-
 action_0 (21) = happyShift action_3
 action_0 (4) = happyGoto action_4
 action_0 (5) = happyGoto action_2
-action_0 _ = happyFail (happyExpListPerState 0)
+action_0 _ = happyFail
 
 action_1 (21) = happyShift action_3
 action_1 (5) = happyGoto action_2
-action_1 _ = happyFail (happyExpListPerState 1)
+action_1 _ = happyFail
 
 action_2 _ = happyReduce_1
 
@@ -62,10 +43,10 @@ action_3 (7) = happyGoto action_5
 action_3 (8) = happyGoto action_6
 action_3 (10) = happyGoto action_7
 action_3 (11) = happyGoto action_8
-action_3 _ = happyFail (happyExpListPerState 3)
+action_3 _ = happyFail
 
 action_4 (37) = happyAccept
-action_4 _ = happyFail (happyExpListPerState 4)
+action_4 _ = happyFail
 
 action_5 _ = happyReduce_7
 
@@ -86,7 +67,7 @@ action_6 (35) = happyShift action_36
 action_6 _ = happyReduce_27
 
 action_7 (17) = happyShift action_22
-action_7 _ = happyFail (happyExpListPerState 7)
+action_7 _ = happyFail
 
 action_8 _ = happyReduce_9
 
@@ -105,7 +86,7 @@ action_11 (33) = happyShift action_16
 action_11 (7) = happyGoto action_5
 action_11 (8) = happyGoto action_21
 action_11 (11) = happyGoto action_8
-action_11 _ = happyFail (happyExpListPerState 11)
+action_11 _ = happyFail
 
 action_12 _ = happyReduce_29
 
@@ -116,7 +97,7 @@ action_13 _ = happyReduce_5
 action_14 _ = happyReduce_33
 
 action_15 (18) = happyShift action_18
-action_15 _ = happyFail (happyExpListPerState 15)
+action_15 _ = happyFail
 
 action_16 (13) = happyShift action_9
 action_16 (14) = happyShift action_10
@@ -129,7 +110,7 @@ action_16 (33) = happyShift action_16
 action_16 (7) = happyGoto action_5
 action_16 (8) = happyGoto action_17
 action_16 (11) = happyGoto action_8
-action_16 _ = happyFail (happyExpListPerState 16)
+action_16 _ = happyFail
 
 action_17 (12) = happyShift action_23
 action_17 (15) = happyShift action_24
@@ -145,7 +126,7 @@ action_17 (30) = happyShift action_33
 action_17 (31) = happyShift action_34
 action_17 (32) = happyShift action_35
 action_17 (34) = happyShift action_56
-action_17 _ = happyFail (happyExpListPerState 17)
+action_17 _ = happyFail
 
 action_18 _ = happyReduce_30
 
@@ -165,7 +146,7 @@ action_19 (11) = happyGoto action_8
 action_19 _ = happyReduce_25
 
 action_20 (19) = happyShift action_53
-action_20 _ = happyFail (happyExpListPerState 20)
+action_20 _ = happyFail
 
 action_21 (12) = happyShift action_23
 action_21 (15) = happyShift action_24
@@ -184,7 +165,7 @@ action_21 _ = happyReduce_11
 
 action_22 (19) = happyShift action_52
 action_22 (6) = happyGoto action_51
-action_22 _ = happyFail (happyExpListPerState 22)
+action_22 _ = happyFail
 
 action_23 (13) = happyShift action_9
 action_23 (14) = happyShift action_10
@@ -197,7 +178,7 @@ action_23 (33) = happyShift action_16
 action_23 (7) = happyGoto action_5
 action_23 (8) = happyGoto action_50
 action_23 (11) = happyGoto action_8
-action_23 _ = happyFail (happyExpListPerState 23)
+action_23 _ = happyFail
 
 action_24 (13) = happyShift action_9
 action_24 (14) = happyShift action_10
@@ -210,7 +191,7 @@ action_24 (33) = happyShift action_16
 action_24 (7) = happyGoto action_5
 action_24 (8) = happyGoto action_49
 action_24 (11) = happyGoto action_8
-action_24 _ = happyFail (happyExpListPerState 24)
+action_24 _ = happyFail
 
 action_25 (13) = happyShift action_9
 action_25 (14) = happyShift action_10
@@ -223,7 +204,7 @@ action_25 (33) = happyShift action_16
 action_25 (7) = happyGoto action_5
 action_25 (8) = happyGoto action_48
 action_25 (11) = happyGoto action_8
-action_25 _ = happyFail (happyExpListPerState 25)
+action_25 _ = happyFail
 
 action_26 (13) = happyShift action_9
 action_26 (14) = happyShift action_10
@@ -236,7 +217,7 @@ action_26 (33) = happyShift action_16
 action_26 (7) = happyGoto action_5
 action_26 (8) = happyGoto action_47
 action_26 (11) = happyGoto action_8
-action_26 _ = happyFail (happyExpListPerState 26)
+action_26 _ = happyFail
 
 action_27 (13) = happyShift action_9
 action_27 (14) = happyShift action_10
@@ -249,7 +230,7 @@ action_27 (33) = happyShift action_16
 action_27 (7) = happyGoto action_5
 action_27 (8) = happyGoto action_46
 action_27 (11) = happyGoto action_8
-action_27 _ = happyFail (happyExpListPerState 27)
+action_27 _ = happyFail
 
 action_28 (13) = happyShift action_9
 action_28 (14) = happyShift action_10
@@ -262,7 +243,7 @@ action_28 (33) = happyShift action_16
 action_28 (7) = happyGoto action_5
 action_28 (8) = happyGoto action_45
 action_28 (11) = happyGoto action_8
-action_28 _ = happyFail (happyExpListPerState 28)
+action_28 _ = happyFail
 
 action_29 (13) = happyShift action_9
 action_29 (14) = happyShift action_10
@@ -275,7 +256,7 @@ action_29 (33) = happyShift action_16
 action_29 (7) = happyGoto action_5
 action_29 (8) = happyGoto action_44
 action_29 (11) = happyGoto action_8
-action_29 _ = happyFail (happyExpListPerState 29)
+action_29 _ = happyFail
 
 action_30 (13) = happyShift action_9
 action_30 (14) = happyShift action_10
@@ -288,7 +269,7 @@ action_30 (33) = happyShift action_16
 action_30 (7) = happyGoto action_5
 action_30 (8) = happyGoto action_43
 action_30 (11) = happyGoto action_8
-action_30 _ = happyFail (happyExpListPerState 30)
+action_30 _ = happyFail
 
 action_31 (13) = happyShift action_9
 action_31 (14) = happyShift action_10
@@ -301,7 +282,7 @@ action_31 (33) = happyShift action_16
 action_31 (7) = happyGoto action_5
 action_31 (8) = happyGoto action_42
 action_31 (11) = happyGoto action_8
-action_31 _ = happyFail (happyExpListPerState 31)
+action_31 _ = happyFail
 
 action_32 (13) = happyShift action_9
 action_32 (14) = happyShift action_10
@@ -314,7 +295,7 @@ action_32 (33) = happyShift action_16
 action_32 (7) = happyGoto action_5
 action_32 (8) = happyGoto action_41
 action_32 (11) = happyGoto action_8
-action_32 _ = happyFail (happyExpListPerState 32)
+action_32 _ = happyFail
 
 action_33 (13) = happyShift action_9
 action_33 (14) = happyShift action_10
@@ -327,7 +308,7 @@ action_33 (33) = happyShift action_16
 action_33 (7) = happyGoto action_5
 action_33 (8) = happyGoto action_40
 action_33 (11) = happyGoto action_8
-action_33 _ = happyFail (happyExpListPerState 33)
+action_33 _ = happyFail
 
 action_34 (13) = happyShift action_9
 action_34 (14) = happyShift action_10
@@ -340,7 +321,7 @@ action_34 (33) = happyShift action_16
 action_34 (7) = happyGoto action_5
 action_34 (8) = happyGoto action_39
 action_34 (11) = happyGoto action_8
-action_34 _ = happyFail (happyExpListPerState 34)
+action_34 _ = happyFail
 
 action_35 (13) = happyShift action_9
 action_35 (14) = happyShift action_10
@@ -353,7 +334,7 @@ action_35 (33) = happyShift action_16
 action_35 (7) = happyGoto action_5
 action_35 (8) = happyGoto action_38
 action_35 (11) = happyGoto action_8
-action_35 _ = happyFail (happyExpListPerState 35)
+action_35 _ = happyFail
 
 action_36 (13) = happyShift action_9
 action_36 (14) = happyShift action_10
@@ -367,7 +348,7 @@ action_36 (7) = happyGoto action_5
 action_36 (8) = happyGoto action_6
 action_36 (10) = happyGoto action_37
 action_36 (11) = happyGoto action_8
-action_36 _ = happyFail (happyExpListPerState 36)
+action_36 _ = happyFail
 
 action_37 _ = happyReduce_28
 
@@ -449,11 +430,7 @@ action_42 _ = happyReduce_18
 action_43 (12) = happyShift action_23
 action_43 (15) = happyShift action_24
 action_43 (22) = happyShift action_25
-action_43 (23) = happyShift action_26
-action_43 (24) = happyShift action_27
-action_43 (25) = happyShift action_28
 action_43 (26) = happyShift action_29
-action_43 (27) = happyShift action_30
 action_43 (28) = happyShift action_31
 action_43 (29) = happyShift action_32
 action_43 (30) = happyShift action_33
@@ -479,11 +456,7 @@ action_44 _ = happyReduce_16
 action_45 (12) = happyShift action_23
 action_45 (15) = happyShift action_24
 action_45 (22) = happyShift action_25
-action_45 (23) = happyShift action_26
-action_45 (24) = happyShift action_27
-action_45 (25) = happyShift action_28
 action_45 (26) = happyShift action_29
-action_45 (27) = happyShift action_30
 action_45 (28) = happyShift action_31
 action_45 (29) = happyShift action_32
 action_45 (30) = happyShift action_33
@@ -494,8 +467,6 @@ action_45 _ = happyReduce_15
 action_46 (12) = happyShift action_23
 action_46 (15) = happyShift action_24
 action_46 (22) = happyShift action_25
-action_46 (23) = happyShift action_26
-action_46 (24) = happyShift action_27
 action_46 (25) = happyShift action_28
 action_46 (26) = happyShift action_29
 action_46 (27) = happyShift action_30
@@ -509,8 +480,6 @@ action_46 _ = happyReduce_13
 action_47 (12) = happyShift action_23
 action_47 (15) = happyShift action_24
 action_47 (22) = happyShift action_25
-action_47 (23) = happyShift action_26
-action_47 (24) = happyShift action_27
 action_47 (25) = happyShift action_28
 action_47 (26) = happyShift action_29
 action_47 (27) = happyShift action_30
@@ -574,7 +543,7 @@ action_52 _ = happyReduce_3
 action_53 _ = happyReduce_6
 
 action_54 (34) = happyShift action_57
-action_54 _ = happyFail (happyExpListPerState 54)
+action_54 _ = happyFail
 
 action_55 _ = happyReduce_26
 
@@ -584,7 +553,7 @@ action_57 _ = happyReduce_8
 
 action_58 (19) = happyShift action_52
 action_58 (6) = happyGoto action_59
-action_58 _ = happyFail (happyExpListPerState 58)
+action_58 _ = happyFail
 
 action_59 _ = happyReduce_4
 
@@ -888,11 +857,11 @@ happyNewToken action sts stk (tk:tks) =
 	TokenRPar -> cont 34;
 	TokenComma -> cont 35;
 	TokenDot -> cont 36;
-	_ -> happyError' ((tk:tks), [])
+	_ -> happyError' (tk:tks)
 	}
 
-happyError_ explist 37 tk tks = happyError' (tks, explist)
-happyError_ explist _ tk tks = happyError' ((tk:tks), explist)
+happyError_ 37 tk tks = happyError' tks
+happyError_ _ tk tks = happyError' (tk:tks)
 
 newtype HappyIdentity a = HappyIdentity a
 happyIdentity = HappyIdentity
@@ -902,10 +871,10 @@ instance Functor HappyIdentity where
     fmap f (HappyIdentity a) = HappyIdentity (f a)
 
 instance Applicative HappyIdentity where
-    pure  = HappyIdentity
+    pure  = return
     (<*>) = ap
 instance Monad HappyIdentity where
-    return = pure
+    return = HappyIdentity
     (HappyIdentity p) >>= q = q p
 
 happyThen :: () => HappyIdentity a -> (a -> HappyIdentity b) -> HappyIdentity b
@@ -915,10 +884,11 @@ happyReturn = (return)
 happyThen1 m k tks = (>>=) m (\a -> k a tks)
 happyReturn1 :: () => a -> b -> HappyIdentity a
 happyReturn1 = \a tks -> (return) a
-happyError' :: () => ([(UsqlLex.Token)], [String]) -> HappyIdentity a
-happyError' = HappyIdentity . (\(tokens, _) -> parseError tokens)
+happyError' :: () => [(UsqlLex.Token)] -> HappyIdentity a
+happyError' = HappyIdentity . parseError
+
 usqlParser tks = happyRunIdentity happySomeParser where
- happySomeParser = happyThen (happyParse action_0 tks) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
+  happySomeParser = happyThen (happyParse action_0 tks) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
 
 happySeq = happyDontSeq
 
@@ -933,10 +903,6 @@ parseError _ = error "Parse error"
 # 1 "/usr/include/stdc-predef.h" 1 3 4
 
 # 17 "/usr/include/stdc-predef.h" 3 4
-
-
-
-
 
 
 
@@ -999,167 +965,12 @@ parseError _ = error "Parse error"
 
 
 {-# LINE 8 "<command-line>" #-}
-{-# LINE 1 "/tmp/ghc8814_0/ghc_2.h" #-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{-# LINE 8 "<command-line>" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp 
 
+{-# LINE 13 "templates/GenericTemplate.hs" #-}
+
+{-# LINE 46 "templates/GenericTemplate.hs" #-}
 
 
 
@@ -1168,21 +979,11 @@ parseError _ = error "Parse error"
 
 
 
-{-# LINE 43 "templates/GenericTemplate.hs" #-}
+{-# LINE 67 "templates/GenericTemplate.hs" #-}
 
-data Happy_IntList = HappyCons Int Happy_IntList
+{-# LINE 77 "templates/GenericTemplate.hs" #-}
 
-
-
-
-
-
-
-{-# LINE 65 "templates/GenericTemplate.hs" #-}
-
-{-# LINE 75 "templates/GenericTemplate.hs" #-}
-
-{-# LINE 84 "templates/GenericTemplate.hs" #-}
+{-# LINE 86 "templates/GenericTemplate.hs" #-}
 
 infixr 9 `HappyStk`
 data HappyStk a = HappyStk a (HappyStk a)
@@ -1206,27 +1007,7 @@ happyAccept j tk st sts (HappyStk ans _) =
 -----------------------------------------------------------------------------
 -- Arrays only: do the next action
 
-{-# LINE 137 "templates/GenericTemplate.hs" #-}
-
-{-# LINE 147 "templates/GenericTemplate.hs" #-}
-indexShortOffAddr arr off = arr Happy_Data_Array.! off
-
-
-{-# INLINE happyLt #-}
-happyLt x y = (x < y)
-
-
-
-
-
-
-readArrayBit arr bit =
-    Bits.testBit (indexShortOffAddr arr (bit `div` 16)) (bit `mod` 16)
-
-
-
-
-
+{-# LINE 155 "templates/GenericTemplate.hs" #-}
 
 -----------------------------------------------------------------------------
 -- HappyState data type (not arrays)
@@ -1257,30 +1038,30 @@ happyShift new_state i tk st sts stk =
 -- happyReduce is specialised for the common cases.
 
 happySpecReduce_0 i fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happySpecReduce_0 nt fn j tk st@((HappyState (action))) sts stk
      = action nt j tk st ((st):(sts)) (fn `HappyStk` stk)
 
 happySpecReduce_1 i fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happySpecReduce_1 nt fn j tk _ sts@(((st@(HappyState (action))):(_))) (v1`HappyStk`stk')
      = let r = fn v1 in
        happySeq r (action nt j tk st sts (r `HappyStk` stk'))
 
 happySpecReduce_2 i fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happySpecReduce_2 nt fn j tk _ ((_):(sts@(((st@(HappyState (action))):(_))))) (v1`HappyStk`v2`HappyStk`stk')
      = let r = fn v1 v2 in
        happySeq r (action nt j tk st sts (r `HappyStk` stk'))
 
 happySpecReduce_3 i fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happySpecReduce_3 nt fn j tk _ ((_):(((_):(sts@(((st@(HappyState (action))):(_))))))) (v1`HappyStk`v2`HappyStk`v3`HappyStk`stk')
      = let r = fn v1 v2 v3 in
        happySeq r (action nt j tk st sts (r `HappyStk` stk'))
 
 happyReduce k i fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happyReduce k nt fn j tk st sts stk
      = case happyDrop (k - ((1) :: Int)) sts of
          sts1@(((st1@(HappyState (action))):(_))) ->
@@ -1288,7 +1069,7 @@ happyReduce k nt fn j tk st sts stk
                 happyDoSeq r (action nt j tk st1 sts1 r)
 
 happyMonadReduce k nt fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happyMonadReduce k nt fn j tk st sts stk =
       case happyDrop k ((st):(sts)) of
         sts1@(((st1@(HappyState (action))):(_))) ->
@@ -1296,7 +1077,7 @@ happyMonadReduce k nt fn j tk st sts stk =
           happyThen1 (fn stk tk) (\r -> action nt j tk st1 sts1 (r `HappyStk` drop_stk))
 
 happyMonad2Reduce k nt fn (1) tk st sts stk
-     = happyFail [] (1) tk st sts stk
+     = happyFail (1) tk st sts stk
 happyMonad2Reduce k nt fn j tk st sts stk =
       case happyDrop k ((st):(sts)) of
         sts1@(((st1@(HappyState (action))):(_))) ->
@@ -1306,7 +1087,6 @@ happyMonad2Reduce k nt fn j tk st sts stk =
 
 
 
-             _ = nt :: Int
              new_state = action
 
           in
@@ -1321,7 +1101,7 @@ happyDropStk n (x `HappyStk` xs) = happyDropStk (n - ((1)::Int)) xs
 -----------------------------------------------------------------------------
 -- Moving to a new state after a reduction
 
-{-# LINE 267 "templates/GenericTemplate.hs" #-}
+{-# LINE 256 "templates/GenericTemplate.hs" #-}
 happyGoto action j tk st = action j j tk (HappyState action)
 
 
@@ -1329,10 +1109,10 @@ happyGoto action j tk st = action j j tk (HappyState action)
 -- Error recovery ((1) is the error token)
 
 -- parse error if we are in recovery and we fail again
-happyFail explist (1) tk old_st _ stk@(x `HappyStk` _) =
+happyFail (1) tk old_st _ stk@(x `HappyStk` _) =
      let i = (case x of { HappyErrorToken (i) -> i }) in
 --      trace "failing" $ 
-        happyError_ explist i tk
+        happyError_ i tk
 
 {-  We don't need state discarding for our restricted implementation of
     "error".  In fact, it can cause some bogus parses, so I've disabled it
@@ -1347,7 +1127,7 @@ happyFail  (1) tk old_st (((HappyState (action))):(sts))
 
 -- Enter error recovery: generate an error token,
 --                       save the old token and carry on.
-happyFail explist i tk (HappyState (action)) sts stk =
+happyFail  i tk (HappyState (action)) sts stk =
 --      trace "entering error recovery" $
         action (1) (1) tk (HappyState (action)) sts ( (HappyErrorToken (i)) `HappyStk` stk)
 
@@ -1380,7 +1160,7 @@ happyDontSeq a b = b
 -- of deciding to inline happyGoto everywhere, which increases the size of
 -- the generated parser quite a bit.
 
-{-# LINE 333 "templates/GenericTemplate.hs" #-}
+{-# LINE 322 "templates/GenericTemplate.hs" #-}
 {-# NOINLINE happyShift #-}
 {-# NOINLINE happySpecReduce_0 #-}
 {-# NOINLINE happySpecReduce_1 #-}
