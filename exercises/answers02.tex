@@ -76,7 +76,7 @@ Finally, define a more efficient version of \texttt{inorder} that
    
    ino :: Tree a -> [a] -> [a]
    ino Lf xs = xs
-   ino (Br x l r) xs = ino l . (x:) . ino r
+   ino (Br x l r) xs = ino l (x: ino r xs)
    
    postorder : Tree a -> [a]
    postorder tree = posto tree []

@@ -19,33 +19,6 @@
 \end{center}
 
 
-\begin{exercise} 
-Use the compiler \texttt{scomp} from \texttt{Intcomp1.hs} to compile the following 
-expressions to produce a sequence of instructions. You shall try to work it out on paper before checking your answer with GHCi. 
-Note that you will need to translate the programs into abstract syntax before calling \texttt{scomp}. 
-
-{\codesetup\begin{verbatim}
-   let z = 17 in z + z
-\end{verbatim}}
-
-{\codesetup\begin{verbatim}
-   20 + let z = 17 in z + 2 end + 30
-\end{verbatim}}
-
-Now execute your instruction sequences according to \texttt{seval} by specifying the stack content at each step. Again, you shall work 
-it out on paper before using GHCi. Note that if your execution results in an error, 
-it may mean that your instruction sequence from above is wrong. 
-
-You are strongly encouraged to repeat this exercise with other expressions you may come out with and check the answer with GHCi.\\
-
-  \noindent
-\textbf{\emph{Answer}}
-  {\codesetup\begin{verbatim}
-  [SCstI 17,SVar 0,SVar 1,SAdd,SSwap,SPop]
-  [SCstI 20,SCstI 17,SVar 0,SCstI 2,SAdd,SSwap,SPop,SAdd,SCstI 30,SAdd]
-  \end{verbatim}}
-
-\end{exercise}
 
 
 
@@ -86,6 +59,33 @@ In the last lab, we have extend the expression language \texttt{Expr} from \text
 \end{verbatim}}
 \end{exercise}
 
+\begin{exercise} 
+Use the compiler \texttt{scomp} from \texttt{Intcomp1.hs} to compile the following 
+expressions to produce a sequence of instructions. You shall try to work it out on paper before checking your answer with GHCi. 
+Note that you will need to translate the programs into abstract syntax before calling \texttt{scomp}. 
+
+{\codesetup\begin{verbatim}
+   let z = 17 in z + z
+\end{verbatim}}
+
+{\codesetup\begin{verbatim}
+   20 + let z = 17 in z + 2 end + 30
+\end{verbatim}}
+
+Now execute your instruction sequences according to \texttt{seval} by specifying the stack content at each step. Again, you shall work 
+it out on paper before using GHCi. Note that if your execution results in an error, 
+it may mean that your instruction sequence from above is wrong. 
+
+You are strongly encouraged to repeat this exercise with other expressions you may come out with and check the answer with GHCi.\\
+
+  \noindent
+\textbf{\emph{Answer}}
+  {\codesetup\begin{verbatim}
+  [SCstI 17,SVar 0,SVar 1,SAdd,SSwap,SPop]
+  [SCstI 20,SCstI 17,SVar 0,SCstI 2,SAdd,SSwap,SPop,SAdd,SCstI 30,SAdd]
+  \end{verbatim}}
+
+\end{exercise}
 
 \begin{exercise}\label{exer-comp-expr-to-ints}
   Write a bytecode assembler (in Haskell) that translates a list
