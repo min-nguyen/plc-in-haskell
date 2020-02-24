@@ -8,7 +8,8 @@ import ExprLex
 %name exprParser
 %tokentype  { ExprLex.Token }
 %error      { parseError }
-
+%left '-' '+' 
+%left '*'
 
 %token 
         let     { TokenLet  }
