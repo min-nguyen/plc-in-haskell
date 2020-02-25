@@ -19,24 +19,6 @@
 \end{center}
 
 
-
-\begin{exercise}\label{exer-multi-let-tcomp}
-In the last lab, we have extend the expression language \texttt{Expr} from \texttt{Intcomp1.hs}
-  with multiple \emph{sequential} let-bindings, such as this (in
-  concrete syntax):
-
-{\codesetup\begin{verbatim}
-   let x1 = 5+7   x2 = x1*2 in x1+x2 end
-\end{verbatim}}
-
-  Revise the \texttt{Expr}-to-\texttt{TExpr} compiler \texttt{tcomp ::\ 
-    Expr -> TExpr} from \texttt{Intcomp1.fs} to work for the extended
-  \texttt{Expr} language.
-  There is no need to modify the \texttt{TExpr} language or the
-  \texttt{teval} interpreter to accommodate multiple sequential
-  let-bindings.
-\end{exercise}
-
 \begin{exercise} 
 Use the compiler \texttt{scomp} from \texttt{Intcomp1.hs} to compile the following 
 expressions to produce a sequence of instructions. You shall try to work it out on paper before checking your answer with GHCi. 
@@ -56,6 +38,24 @@ it may mean that your instruction sequence from above is wrong.
 
 You are strongly encouraged to repeat this exercise with other expressions you may come out with and check the answer with GHCi.\\
 \end{exercise}
+
+\begin{exercise}\label{exer-multi-let-tcomp}
+In the last lab, we have extend the expression language \texttt{Expr} from \texttt{Intcomp1.hs}
+  with multiple \emph{sequential} let-bindings, such as this (in
+  concrete syntax):
+
+{\codesetup\begin{verbatim}
+   let x1 = 5+7   x2 = x1*2 in x1+x2 end
+\end{verbatim}}
+
+  Revise the \texttt{Expr}-to-\texttt{TExpr} compiler \texttt{tcomp ::\ 
+    Expr -> TExpr} from \texttt{Intcomp1.fs} to work for the extended
+  \texttt{Expr} language.
+  There is no need to modify the \texttt{TExpr} language or the
+  \texttt{teval} interpreter to accommodate multiple sequential
+  let-bindings.
+\end{exercise}
+
 
 
 \begin{exercise}\label{exer-comp-expr-to-ints}
