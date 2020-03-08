@@ -10,14 +10,14 @@
 \usepackage[dvips]{graphicx}
 \usepackage{xcolor}
 
-\setcounter{exercise-sheet}{3}
+\setcounter{exercise-sheet}{19}
 
 \begin{document}
 
 \begin{center}
-{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
-Monday 7 September 2009}\\[1ex]
-{\small 2009-09-09}\\[2ex]
+{\Large\bf Exercises week \arabic{exercise-sheet}}\\[1ex]
+%Monday 7 September 2009}\\[1ex]
+%{\small 2009-09-09}\\[2ex]
 \end{center}
 
 \subsection*{Goal of the exercises}
@@ -26,21 +26,21 @@ The main goal of this week's exercises is to familiarize yourself with
 regular expressions, automata, grammars, the \texttt{alex} lexer
 generator and the \texttt{happy} parser generator.
 
-\noindent 
-Do exercises~\ref{exer-automata-mogensen}, \ref{exer-re},
-\ref{exer-expr-derivation}, \ref{exer-expr-derivation-tree},
-\ref{exer-expr-parse-try}, \ref{exer-expr-parse+scomp} and
-\ref{exer-expr-conditional}.  Hand in solutions to
-exercises~\ref{exer-re}, \ref{exer-expr-parse-try},
-\ref{exer-expr-parse+scomp} and~\ref{exer-expr-conditional}.
-Exercise~\ref{exer-expr-parse-steps} is very instructive too, but
-requires some patience.
+%\noindent 
+%Do exercises~\ref{exer-automata-mogensen}, \ref{exer-re},
+%\ref{exer-expr-derivation}, \ref{exer-expr-derivation-tree},
+%\ref{exer-expr-parse-try}, \ref{exer-expr-parse+scomp} and
+%\ref{exer-expr-conditional}.  Hand in solutions to
+%exercises~\ref{exer-re}, \ref{exer-expr-parse-try},
+%\ref{exer-expr-parse+scomp} and~\ref{exer-expr-conditional}.
+%Exercise~\ref{exer-expr-parse-steps} is very instructive too, but
+%requires some patience.
 
 
-\begin{exercise}\label{exer-automata-mogensen}
-{\color{red}{I haven't translated this question/answer - not sure about its relevance?}}
-  Do exercises 2.2 and 2.3 in Mogensen 2009.
-\end{exercise}
+%\begin{exercise}\label{exer-automata-mogensen}
+%{\color{red}{I haven't translated this question/answer - not sure about its relevance?}}
+%  Do exercises 2.2 and 2.3 in Mogensen 2009.
+%\end{exercise}
 
 
 \begin{exercise}\label{exer-re}
@@ -150,30 +150,30 @@ Documentation for \texttt{alex} and \texttt{happy} can be found online.
 \end{exercise}
 
 
-\begin{exercise}\label{exer-expr-parse-steps}
-   Determine the steps taken by the parser generated from
-  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
-
-{\codesetup\begin{verbatim}
-   let z = 17 in z + 2 * 3 end 
-\end{verbatim}} 
-
-\noindent 
-For each step, show the remaining input, the parse stack, and the
-action (shift, reduce, or goto) performed.  You will need a printout
-of the parser states and their transitions to do this exercise; to do this, run
-the following before calling the \texttt{parseFromString} function.
-
-{\codesetup\begin{verbatim}
-   happy -da ExprPar.y
-   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
-\end{verbatim}} 
-
-Sanity check: the
-sequence of reduce action rule numbers in the parse should be the
-exact reverse of that found in the derivation in
-Exercise~\ref{exer-expr-derivation}.
-\end{exercise}
+%\begin{exercise}\label{exer-expr-parse-steps}
+%   Determine the steps taken by the parser generated from
+%  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
+%
+%{\codesetup\begin{verbatim}
+%   let z = 17 in z + 2 * 3 end 
+%\end{verbatim}} 
+%
+%\noindent 
+%For each step, show the remaining input, the parse stack, and the
+%action (shift, reduce, or goto) performed.  You will need a printout
+%of the parser states and their transitions to do this exercise; to do this, run
+%the following before calling the \texttt{parseFromString} function.
+%
+%{\codesetup\begin{verbatim}
+%   happy -da ExprPar.y
+%   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
+%\end{verbatim}} 
+%
+%Sanity check: the
+%sequence of reduce action rule numbers in the parse should be the
+%exact reverse of that found in the derivation in
+%Exercise~\ref{exer-expr-derivation}.
+%\end{exercise}
 
 
 
