@@ -251,62 +251,59 @@ Expr    : ...
 \end{verbatim}} 
 \end{exercise}
 
+\begin{exercise}\label{exer-expr-parse-steps}
+  (This exercise is optional and will require some selfstudy.) Determine the steps taken by the parser generated from
+  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
 
-%\begin{exercise}\label{exer-expr-parse-steps}
-%  Determine the steps taken by the parser generated from
-%  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
-%
-%{\codesetup\begin{verbatim}
-%   let z = 17 in z + 2 * 3 end 
-%\end{verbatim}} 
-%
-%\noindent 
-%For each step, show the remaining input, the parse stack, and the
-%action (shift, reduce, or goto) performed.  You will need a printout
-%of the parser states and their transitions to do this exercise; to do this, run
-%the following before calling the \texttt{parseFromString} function.
-%
-%{\codesetup\begin{verbatim}
-%   happy -da ExprPar.y
-%   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
-%\end{verbatim}} 
-%
-%Sanity check: the
-%sequence of reduce action rule numbers in the parse should be the
-%exact reverse of that found in the derivation in
-%Exercise~\ref{exer-expr-derivation}.\\
-%
-%
-%\noindent
-%\textbf{\emph{Answer}} 
-%
-%{\codesetup\begin{verbatim}
-%PARSE STACK                             INPUT                           ACTION
-%   	                                    let z = 17 in z + 2 * 3 end     action: shift
-%let	                                    z = 17 in z + 2 * 3 end         action: shift
-%let var                                 = 17 in z + 2 * 3 end           action: shift
-%let var =                               17 in z + 2 * 3 end             action: shift
-%let var = num                           in z + 2 * 3 end                action: reduce (rule 2)
-%let var = Expr                          in z + 2 * 3 end                action: shift
-%let var = Expr in                       z + 2 * 3 end                   action: shift
-%let var = Expr in var                   z + 2 * 3 end                   action: reduce (rule 1)
-%let var = Expr in Expr                  + 2 * 3 end                     action: shift
-%let var = Expr in Expr +                2 * 3 end                       action: shift
-%let var = Expr in Expr + num            * 3 end                         action: reduce (rule 2)
-%let var = Expr in Expr + Expr           * 3 end                         action: shift
-%let var = Expr in Expr + Expr *         3 end                           action: shift
-%let var = Expr in Expr + Expr * num     end                             action: reduce (rule 2
-%let var = Expr in Expr + Expr * Expr    end                             action: reduce (rule 6)
-%let var = Expr in Expr + Expr           end                             action: reduce (rule 7)
-%let var = Expr in Expr                  end                             action: shift
-%let var = Expr in Expr end 	                                            action: reduce (rule 5)
-%Expr                                                                    action: accept.
-%\end{verbatim}} 
-%
-%
-%\end{exercise}
+{\codesetup\begin{verbatim}
+   let z = 17 in z + 2 * 3 end 
+\end{verbatim}} 
+
+\noindent 
+For each step, show the remaining input, the parse stack, and the
+action (shift, reduce, or goto) performed.  You will need a printout
+of the parser states and their transitions to do this exercise; to do this, run
+the following before calling the \texttt{parseFromString} function.
+
+{\codesetup\begin{verbatim}
+   happy -da ExprPar.y
+   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
+\end{verbatim}} 
+
+Sanity check: the
+sequence of reduce action rule numbers in the parse should be the
+exact reverse of that found in the derivation in
+Exercise~\ref{exer-expr-derivation}.\\
 
 
+\noindent
+\textbf{\emph{Answer}} 
+
+{\codesetup\begin{verbatim}
+PARSE STACK                             INPUT                           ACTION
+   	                                    let z = 17 in z + 2 * 3 end     action: shift
+let	                                    z = 17 in z + 2 * 3 end         action: shift
+let var                                 = 17 in z + 2 * 3 end           action: shift
+let var =                               17 in z + 2 * 3 end             action: shift
+let var = num                           in z + 2 * 3 end                action: reduce (rule 2)
+let var = Expr                          in z + 2 * 3 end                action: shift
+let var = Expr in                       z + 2 * 3 end                   action: shift
+let var = Expr in var                   z + 2 * 3 end                   action: reduce (rule 1)
+let var = Expr in Expr                  + 2 * 3 end                     action: shift
+let var = Expr in Expr +                2 * 3 end                       action: shift
+let var = Expr in Expr + num            * 3 end                         action: reduce (rule 2)
+let var = Expr in Expr + Expr           * 3 end                         action: shift
+let var = Expr in Expr + Expr *         3 end                           action: shift
+let var = Expr in Expr + Expr * num     end                             action: reduce (rule 2
+let var = Expr in Expr + Expr * Expr    end                             action: reduce (rule 6)
+let var = Expr in Expr + Expr           end                             action: reduce (rule 7)
+let var = Expr in Expr                  end                             action: shift
+let var = Expr in Expr end 	                                            action: reduce (rule 5)
+Expr                                                                    action: accept.
+\end{verbatim}} 
+
+
+\end{exercise}
 
 \begin{exercise}\label{exer-usql-parse-def}
     Files in the directory \texttt{UsqlLang/} contain 
@@ -394,5 +391,7 @@ are lists of column names, as in this example:
 
 
 \end{exercise}
+
+
 
 \end{document}

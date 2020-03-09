@@ -107,13 +107,13 @@ typ (Var  x) env = lookup env x
 typ (Prim ope e1 e2) env = 
     let t1 = typ e1 env
         t2 = typ e2 env
-    in case ope of
-        "*" -> TypI
-        "+" -> TypI
-        "-" -> TypI
-        "=" -> TypB
-        "<" -> TypB
-        "&" -> TypB
+    in case (ope, t1, t2) of
+        ("*", TypI, TypI) -> TypI
+        ("+", TypI, TypI) -> TypI
+        ("-", TypI, TypI) -> TypI
+        ("=", TypI, TypI) -> TypB
+        ("<", TypI, TypI) -> TypB
+        ("&", TypB, TypB) -> TypB
         _   -> error "unknown op, or type error"
 typ (Let x eRhs letBody) env = 
     let xTyp        = typ eRhs env

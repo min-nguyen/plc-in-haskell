@@ -150,30 +150,30 @@ Documentation for \texttt{alex} and \texttt{happy} can be found online.
 \end{exercise}
 
 
-%\begin{exercise}\label{exer-expr-parse-steps}
-%   Determine the steps taken by the parser generated from
-%  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
-%
-%{\codesetup\begin{verbatim}
-%   let z = 17 in z + 2 * 3 end 
-%\end{verbatim}} 
-%
-%\noindent 
-%For each step, show the remaining input, the parse stack, and the
-%action (shift, reduce, or goto) performed.  You will need a printout
-%of the parser states and their transitions to do this exercise; to do this, run
-%the following before calling the \texttt{parseFromString} function.
-%
-%{\codesetup\begin{verbatim}
-%   happy -da ExprPar.y
-%   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
-%\end{verbatim}} 
-%
-%Sanity check: the
-%sequence of reduce action rule numbers in the parse should be the
-%exact reverse of that found in the derivation in
-%Exercise~\ref{exer-expr-derivation}.
-%\end{exercise}
+\begin{exercise}\label{exer-expr-parse-steps} (\emph{This question is optional and will require some selfstudy.})
+   Determine the steps taken by the parser generated from
+  \texttt{ExprLang/ExprPar.y} during the parsing of this string:
+
+{\codesetup\begin{verbatim}
+   let z = 17 in z + 2 * 3 end 
+\end{verbatim}} 
+
+\noindent 
+For each step, show the remaining input, the parse stack, and the
+action (shift, reduce, or goto) performed.  You will need a printout
+of the parser states and their transitions to do this exercise; to do this, run
+the following before calling the \texttt{parseFromString} function.
+
+{\codesetup\begin{verbatim}
+   happy -da ExprPar.y
+   ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
+\end{verbatim}} 
+
+Sanity check: the
+sequence of reduce action rule numbers in the parse should be the
+exact reverse of that found in the derivation in
+Exercise~\ref{exer-expr-derivation}.
+\end{exercise}
 
 
 
