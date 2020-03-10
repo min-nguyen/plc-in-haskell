@@ -1,0 +1,235 @@
+
+%       dvips -ta4 exercise04 -o
+%       ps2pdf -sPAPERSIZE=a4 exercise04.ps
+
+\documentclass[a4paper]{article}
+\usepackage{times,fullpage}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bprd}
+\usepackage[dvips]{graphicx}
+
+\setcounter{exercise-sheet}{4}
+
+\begin{document}
+
+\begin{center}
+{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
+Monday 14 September 2009}\\[1ex]
+% {\small 2009-09-10}\\[2ex]
+\end{center}
+
+\subsection*{Goal of the exercises}
+
+The goal of this week's exercises is to understand the evaluation of a
+simple first-order functional language, and how explicit types can be
+given and checked.
+
+Do exercises~\ref{exer-fun-build}, \ref{exer-fun-more-examples},
+\ref{exer-fun-multiple-arguments},
+\ref{exer-fun-multiple-arguments-parse},
+\ref{exer-fun-sequential-logical} and
+\ref{exer-fun-multiple-arguments-typed}, and hand in the latter four.
+
+\begin{exercise}\label{exer-fun-build}
+  Get archive \texttt{fun.zip} from the homepage and unpack to
+  directory \texttt{FunLang}\@.  It contains lexer and parser
+  specifications and interpreter for a small first-order functional
+  language.  Generate and compile the lexer and parser by running
+  \texttt{alex FunLex.x} and \texttt{happy FunPar.y}\@.  Parse and run some example programs using
+  file \texttt{Fun/ParseAndRun.hs} by running \texttt{ghci ParseAndRun.hs Fun.hs Absyn.hs Parse.hs FunLex.hs FunPar.hs} and then calling \texttt{runProgram} on an example program as a string.
+\end{exercise}
+
+
+\begin{exercise}\label{exer-fun-more-examples}
+  Write more example programs in the functional language.  Then test
+  them in the same way as in Exercise~\ref{exer-fun-build}\@.  For
+  instance, write programs that do the following:
+
+  \begin{itemize}
+  \item Compute the sum of the numbers from 1000 down to 1.  Do this
+    by defining a function \texttt{sum n} that computes the sum
+    $n+(n-1)+\cdots + 2 + 1$.  (Use straightforward summation, no
+    clever tricks).
+
+  \item Compute the number $3^8$, that is, 3 raised to the power 8.
+    Again, use a recursive function.
+
+  \item Compute $3^0 + 3^1 + \cdots + 3^{10} + 3^{11}$, using two
+    recursive functions.
+
+  \item Compute $1^8 + 2^8 + \cdots + 10^8$, again using two recursive
+    functions.
+  \end{itemize}
+\end{exercise}
+
+
+\begin{exercise}\label{exer-fun-multiple-arguments}
+  For simplicity, the current implementation of the functional
+  language requires all functions to take exactly one argument.  This
+  seriously limits the programs that can be written in the language
+  (at least it limits what that can be written without excessive
+  cleverness and complications).
+  
+  Modify the language to permit functions to take one or more
+  arguments.  Start by modifying the abstract syntax in
+  \texttt{FunLang/Absyn.hs} to permit a list of parameter names in
+  \texttt{Letfun} and a list of argument expressions in
+  \texttt{Call}\@.  \\
+  
+
+  
+  Then modify the \texttt{eval} interpreter in file
+  \texttt{FunLang/Fun.hs} to work for the new abstract syntax.  You must
+  modify the closure representation to accommodate a list of
+  parameters.  Also, modify the \texttt{Letfun} and \texttt{Call}
+  clauses of the interpreter.  You will need a way to zip together a
+  list of variable names and a list of variable values, to get an
+  environment in the form of an association list; so function
+  \texttt{zip} might be useful.\\
+  
+
+  
+\end{exercise}
+
+\begin{exercise}\label{exer-fun-multiple-arguments-parse}
+  In continuation of Exercise~\ref{exer-fun-multiple-arguments},
+  modify the parser specification to accept a language where functions
+  may take any (non-zero) number of arguments.  The resulting parser
+  should permit function declarations such as these:
+
+{\codesetup\begin{verbatim}
+  let pow x n = if n=0 then 1 else x * pow x (n-1) in pow 3 8 end
+
+  let max2 a b = if a<b then b else a
+  in let max3 a b c = max2 a (max2 b c)
+     in max3 25 6 62 end
+  end
+\end{verbatim}}
+
+
+\noindent 
+You may want to define non-empty parameter lists and argument lists.  Note that multi-argument applications such as\ \ 
+\texttt{f a b}\ \ are already permitted by the existing grammar, but
+they would produce abstract syntax of the form \texttt{Call(Call(Var
+  "f", Var "a"), Var "b")} which the \texttt{Fun.eval} function does
+not understand.  You need to modify the AppExpr nonterminal and its
+semantic action to produce \texttt{Call(Var "f", [Var "a"; Var "b"])}
+instead.\\
+
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-fun-sequential-logical}
+  Extend the (untyped) functional language with infix operator
+  `\verb|&&|' meaning sequential logical `and' and infix operator
+  `\verb+||+' meaning sequential logical `or', as in C, C++, Java,
+  C\#, F\#\@.  Note that \verb+e1 && e2+ can be encoded as \texttt{if
+    e1 then e2 else false} and that \verb+e1 || e2+ can be encoded as
+  \texttt{if e1 then true else e2}.  Hence you need only change the
+  lexer and parser specifications (\texttt{FunLex.x} and \texttt{FunPar.y}), and make the new rules in the
+  parser specification generate the appropriate abstract syntax.  You
+  need not change \texttt{FunLang/Absyn.hs} or \texttt{FunLang/Fun.hs}\@.\\
+  
+
+
+\end{exercise}
+
+\begin{exercise}\label{exer-fun-tuples-eval}
+  Extend the abstract syntax, the concrete syntax, and the interpreter
+  for the untyped functional language to handle tuple constructors
+  \texttt{(...)} and component selectors \verb+#i+ such that \verb+#i+ selects the ith component in a tuple.
+
+{\codesetup\begin{verbatim}
+   data Expr = 
+     | ...
+     | Tup [Expr] 
+     | Sel Int Expr
+     | ...
+\end{verbatim}}
+
+\noindent
+If we use the concrete syntax \verb+#2(e)+ for \texttt{Sel 2 e} and
+\texttt{(e1, e2)} for \texttt{Tup [e1, e2]} then you should be able to
+write programs such as these:
+
+{\codesetup\begin{verbatim}
+   let t = (1+2, false, 5>8)
+   in if #3(t) then #1(t) else 14 end
+\end{verbatim}}
+
+\noindent
+and
+
+{\codesetup\begin{verbatim}
+   let max xy = if #1(xy) > #2(xy) then #1(xy) else #2(xy) 
+   in max (3, 88) end
+\end{verbatim}}
+
+\noindent
+This permits functions to take multiple arguments and return multiple
+results.
+
+To extend the interpreter correspondingly, you need to introduce a new
+kind of value, namely a tuple value \texttt{TupV vs}, and to allow
+\texttt{eval} to return a result of type \texttt{value} (not just an
+integer):
+
+{\codesetup\begin{verbatim}
+
+   data Value = 
+     | IntV Int
+     | TupV [Value]
+     | Closure String [String] Expr (Env Value)
+   
+   eval :: Expr -> Env Value -> Value
+   eval = ...
+\end{verbatim}}
+
+\noindent 
+Note that this requires some changes elsewhere in the \texttt{eval}
+interpreter.  For instance, the primitive operations currently work
+because \texttt{eval} always returns an \texttt{Int}, but with the
+suggested change, they will have to check that \texttt{eval} returns
+an \texttt{IntV i} (e.g.\ by pattern matching).\\
+
+
+\end{exercise}
+
+
+\begin{exercise}\label{exer-fun-multiple-arguments-typed} 
+  Modify the abstract syntax \texttt{TyExpr} and the type checker
+  functions \texttt{typ} and \texttt{typeCheck} in
+  \texttt{TypedFun/TypedFun.hs} to allow functions to take any number
+  of typed parameters.  
+  
+  This exercise is similar to
+  Exercise~\ref{exer-fun-multiple-arguments}, but concerns the typed
+  language.  The changes to the interpreter function \texttt{eval} are
+  very similar to those in Exercise~\ref{exer-fun-multiple-arguments}
+  and can be omitted; just delete the \texttt{eval} function.\\
+  
+
+\end{exercise}
+
+
+\begin{exercise}
+  Add lists (\texttt{CstN} is the empty list \texttt{[]},
+  \texttt{ConC e1 e2} is \texttt{(e1:e2)}), and list pattern matching
+  expressions to the typed functional language, where
+  \texttt{Match e0 e1 (h,t, e2))} is \texttt{match e0 with [] -> e1
+    | h:t -> e2}\\
+
+
+\end{exercise}
+
+\begin{exercise}
+  Add type checking for lists.  All elements of a list must have the
+  same type.  You'll need a new kind of type \texttt{TypL of typ} to
+  represent the type of lists with elements of a given type.\\
+
+\end{exercise}
+
+\end{document}
+
