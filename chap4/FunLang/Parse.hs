@@ -1,8 +1,8 @@
 module Parse where
 
-import Absyn
-import FunPar
-import FunLex
+import           Absyn
+import           FunLex
+import           FunPar
 
 -- | Call generated expr lexer and parser on input string
 -- | > ghci Parse.hs Absyn.hs FunLex.hs FunPar.hs

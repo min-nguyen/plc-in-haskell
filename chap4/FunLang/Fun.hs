@@ -1,7 +1,7 @@
 module Fun where
 
-import Absyn
-import Prelude hiding (lookup)
+import           Absyn
+import           Prelude hiding (lookup)
 
 {- Environment operations -}
 
@@ -16,7 +16,7 @@ lookup env x =
 {- A runtime value is an integer or a function closure -}
 
 data Value = Num Int
-           | Closure String String Expr (Env Value)       -- f x fBody fDeclEnv 
+           | Closure String String Expr (Env Value)       -- f x fBody fDeclEnv
 
 eval :: Expr -> Env Value -> Int
 eval (CstI i) env = i

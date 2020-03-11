@@ -3,7 +3,7 @@
 
 module Intro2 where
 
-import Prelude hiding (lookup)
+import           Prelude hiding (lookup)
 
 {- Association lists map object language variables to their values -}
 

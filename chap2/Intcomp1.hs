@@ -1,20 +1,19 @@
 {- Programming language concepts for software developers, 2012-02-17    -}
 
 {- Evaluation, checking, and compilation of object language expressions -}
-{- Stack machines for expression evaluation                             -} 
+{- Stack machines for expression evaluation                             -}
 
 {- Object language expressions with variable bindings and nested scope  -}
 
-{-# LANGUAGE
-     DeriveFunctor #-}
+{-# LANGUAGE DeriveFunctor #-}
 
 module Intcomp1 where
 
-import Prelude hiding (lookup)
-import Control.Applicative
-import Control.Monad.Trans.Class
-import Control.Monad.Trans.State
-import Data.List (intercalate)
+import           Control.Applicative
+import           Control.Monad.Trans.Class
+import           Control.Monad.Trans.State
+import           Data.List                 (intercalate)
+import           Prelude                   hiding (lookup)
 
 
 {-*----------------------------------------------------------------------*-}
@@ -387,7 +386,7 @@ rcomp (Prim op e1 e2) =
 -- Correctness: eval e []  equals  reval (rcomp e) []
 
 
--- | Storing intermediate results and variable bindings in the same stack 
+-- | Storing intermediate results and variable bindings in the same stack
 
 data SInstr = SCstI Int     -- push integer
             | SVar Int      -- push variable from env

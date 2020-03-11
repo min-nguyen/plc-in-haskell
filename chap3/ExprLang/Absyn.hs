@@ -2,7 +2,7 @@
 
 module Absyn where
 
-import ExprLex
+import           ExprLex
 
 data Expr = CstI Int
           | Var  String

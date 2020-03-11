@@ -21,7 +21,7 @@
 
 module TypedFun where
 
-import Prelude hiding (lookup)
+import           Prelude hiding (lookup)
 
 {- Environment operations -}
 
@@ -114,7 +114,7 @@ typ (Prim ope e1 e2) env =
         ("=", TypI, TypI) -> TypB
         ("<", TypI, TypI) -> TypB
         ("&", TypB, TypB) -> TypB
-        _   -> error "unknown op, or type error"
+        _                 -> error "unknown op, or type error"
 typ (Let x eRhs letBody) env =
     let xTyp        = typ eRhs env
         letBodyEnv  = ((x, xTyp):env)

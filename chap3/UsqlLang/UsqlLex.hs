@@ -11,10 +11,10 @@ module UsqlLex (  usqlLexer
 #include "config.h"
 #endif
 #if __GLASGOW_HASKELL__ >= 503
-import Data.Array
-import Data.Array.Base (unsafeAt)
+import           Data.Array
+import           Data.Array.Base (unsafeAt)
 #else
-import Array
+import           Array
 #endif
 {-# LINE 1 "templates/wrappers.hs" #-}
 {-# LINE 1 "templates/wrappers.hs" #-}
@@ -278,11 +278,11 @@ import Array
 
 
 
-import Data.Word (Word8)
+import           Data.Word       (Word8)
 {-# LINE 28 "templates/wrappers.hs" #-}
 
-import Data.Char (ord)
 import qualified Data.Bits
+import           Data.Char       (ord)
 
 -- | Encode a Haskell String to a list of Word8 values, in UTF8 format.
 utf8Encode :: Char -> [Word8]
@@ -357,8 +357,8 @@ alexInputPrevChar (c,_,_) = c
 alexScanTokens str = go ('\n',[],str)
   where go inp__@(_,_bs,s) =
           case alexScan inp__ 0 of
-                AlexEOF -> []
-                AlexError _ -> error "lexical error"
+                AlexEOF                  -> []
+                AlexError _              -> error "lexical error"
                 AlexSkip  inp__' _ln     -> go inp__'
                 AlexToken inp__' len act -> act (take len s) : go inp__'
 
@@ -367,7 +367,7 @@ alexGetByte (c,(b:bs),s) = Just (b,(c,bs,s))
 alexGetByte (_,[],[])    = Nothing
 alexGetByte (_,[],(c:s)) = case utf8Encode c of
                              (b:bs) -> Just (b, (c, bs, s))
-                             [] -> Nothing
+                             []     -> Nothing
 
 
 
@@ -8754,50 +8754,50 @@ alex_actions = array (0 :: Int, 38)
 {-# LINE 34 "UsqlLex.x" #-}
 
 
-operator :: String -> Token 
-operator c = case c of "+"   -> TokenAdd 
-                       "-"   -> TokenSub 
-                       "*"   -> TokenMul
-                       "/"   -> TokenDiv 
-                       "%"   -> TokenMod
-                       "="   -> TokenEq
-                       "<>"  -> TokenNE
-                       ">"   -> TokenGT
-                       "<"   -> TokenLT 
-                       ">="  -> TokenGE 
-                       "<="  -> TokenLE 
+operator :: String -> Token
+operator c = case c of "+"  -> TokenAdd
+                       "-"  -> TokenSub
+                       "*"  -> TokenMul
+                       "/"  -> TokenDiv
+                       "%"  -> TokenMod
+                       "="  -> TokenEq
+                       "<>" -> TokenNE
+                       ">"  -> TokenGT
+                       "<"  -> TokenLT
+                       ">=" -> TokenGE
+                       "<=" -> TokenLE
 
 
-delimiter :: String -> Token 
-delimiter c = case c of "("   -> TokenLPar
-                        ")"   -> TokenRPar 
-                        ","   -> TokenComma
-                        "."   -> TokenDot 
+delimiter :: String -> Token
+delimiter c = case c of "(" -> TokenLPar
+                        ")" -> TokenRPar
+                        "," -> TokenComma
+                        "." -> TokenDot
 
-data Token  = TokenIn 
-            | TokenEnd 
+data Token  = TokenIn
+            | TokenEnd
             | TokenName String
             | TokenNum Int
             | TokenAdd
             | TokenSub
             | TokenMul
             | TokenDiv
-            | TokenEq 
-            | TokenLPar 
+            | TokenEq
+            | TokenLPar
             | TokenRPar
-            | TokenMod 
-            | TokenNE 
-            | TokenGT 
-            | TokenLT 
-            | TokenGE 
-            | TokenLE 
-            | TokenDot 
-            | TokenComma 
+            | TokenMod
+            | TokenNE
+            | TokenGT
+            | TokenLT
+            | TokenGE
+            | TokenLE
+            | TokenDot
+            | TokenComma
             | TokenString String
-            | TokenAnd 
+            | TokenAnd
             | TokenBool Bool
-            | TokenOr 
-            | TokenFrom 
+            | TokenOr
+            | TokenFrom
             | TokenSelect
             | TokenNot
             deriving (Show, Eq)
@@ -8805,12 +8805,12 @@ data Token  = TokenIn
 usqlLexer :: String -> [Token]
 usqlLexer s = alexScanTokens s
 
-alex_action_1 =  \s -> TokenNum (read s)  
+alex_action_1 =  \s -> TokenNum (read s)
 alex_action_2 =  \s -> let (x:y:ys) = s in operator [x,y]
-alex_action_3 =  \s -> operator ([head s])  
-alex_action_4 =  \s -> delimiter ([head s]) 
+alex_action_3 =  \s -> operator ([head s])
+alex_action_4 =  \s -> delimiter ([head s])
 alex_action_6 =  \s -> TokenString s
-alex_action_7 =  \s -> TokenIn 
+alex_action_7 =  \s -> TokenIn
 alex_action_8 =  \s -> TokenAnd
 alex_action_9 =  \s -> TokenBool False
 alex_action_10 =  \s -> TokenBool True
@@ -8818,7 +8818,7 @@ alex_action_11 =  \s -> TokenSelect
 alex_action_12 =  \s -> TokenOr
 alex_action_13 =  \s -> TokenFrom
 alex_action_14 =  \s -> TokenNot
-alex_action_15 =  \s -> TokenName s 
+alex_action_15 =  \s -> TokenName s
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
@@ -9219,7 +9219,7 @@ alexPrevCharIsOneOf arr _ input__ _ _ = arr ! alexInputPrevChar input__
 alexRightContext (sc) user__ _ _ input__ =
      case alex_scan_tkn user__ input__ (0) input__ sc AlexNone of
           (AlexNone, _) -> False
-          _ -> True
+          _             -> True
         -- TODO: there's no need to find the longest
         -- match when checking the right context, just
         -- the first match will do.

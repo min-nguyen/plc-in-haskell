@@ -1,8 +1,8 @@
 module Parse where
 
-import Absyn
-import UsqlPar
-import UsqlLex
+import           Absyn
+import           UsqlLex
+import           UsqlPar
 
 -- | Call generated expr lexer and parser on input string
 -- | > ghci Parse.hs Absyn.hs UsqlLex.hs UsqlPar.hs
