@@ -13,6 +13,7 @@
 
 module HigherFun where
 
+-- from chap4 FunLang
 import Absyn
 
 {- Environment operations -}
