@@ -3,7 +3,7 @@
 {-# LINE 1 "UsqlLex.x" #-}
 
 module UsqlLex (  usqlLexer
-                , Token(..)) where 
+                , Token(..)) where
 
 #if __GLASGOW_HASKELL__ >= 603
 #include "ghcconfig.h"

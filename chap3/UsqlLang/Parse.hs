@@ -1,7 +1,7 @@
 module Parse where
 
 import Absyn
-import UsqlPar 
+import UsqlPar
 import UsqlLex
 
 -- | Call generated expr lexer and parser on input string
@@ -11,6 +11,6 @@ parseFromString :: String -> Stmt
 parseFromString s = (usqlParser . usqlLexer) s
 
 parseFromFile :: String -> IO ()
-parseFromFile filename = do 
+parseFromFile filename = do
     s <- readFile filename
-    print $ parseFromString s 
+    print $ parseFromString s

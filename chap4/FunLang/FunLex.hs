@@ -3,7 +3,7 @@
 {-# LINE 1 "FunLang/FunLex.x" #-}
 
 module FunLex (   funLexer
-                , Token(..)) where 
+                , Token(..)) where
 
 #if __GLASGOW_HASKELL__ >= 603
 #include "ghcconfig.h"

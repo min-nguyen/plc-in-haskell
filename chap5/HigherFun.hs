@@ -1,4 +1,4 @@
-{- A functional language with integers and higher-order functions 
+{- A functional language with integers and higher-order functions
 
    The language is higher-order because the value of an expression may
    be a function (and therefore a function can be passed as argument
@@ -19,9 +19,9 @@ import Absyn
 
 type Env a = [(String, a)]
 
-lookup :: Env a -> String -> a 
+lookup :: Env a -> String -> a
 lookup env x =
-    case env of 
+    case env of
       []         -> error (x ++ " not found")
       ((y, v):r) -> if x == y then v else lookup r x
 
@@ -32,10 +32,10 @@ data Value = Num Int
         deriving (Show, Eq)
 
 eval :: Expr -> Env Value -> Value
-eval (CstI i) env = Num i 
+eval (CstI i) env = Num i
 eval (CstB b) env = Num (if b then 1 else 0)
 eval (Var  x) env = lookup env x
-eval (Prim ope e1 e2) env = 
+eval (Prim ope e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
     in case (ope, v1, v2) of
@@ -45,19 +45,19 @@ eval (Prim ope e1 e2) env =
         ("=", Num i1, Num i2) -> Num (if i1 == i2 then 1 else 0)
         ("<", Num i1, Num i2) -> Num (if i1 <  i2 then 1 else 0)
         _   -> error ("unknown primitive " ++ ope)
-eval (Let x eRhs letBody) env = 
+eval (Let x eRhs letBody) env =
     let xVal    = eval eRhs env
         bodyEnv = ((x, xVal):env)
     in  eval letBody bodyEnv
-eval (If e1 e2 e3) env = 
-    case eval e1 env of 
-        Num 0 -> eval e3 env 
-        Num _ -> eval e2 env 
+eval (If e1 e2 e3) env =
+    case eval e1 env of
+        Num 0 -> eval e3 env
+        Num _ -> eval e2 env
         _     -> error "eval If"
 eval (Letfun f x fBody letBody) env =
     let bodyEnv = ((f, Closure f x fBody env) : env)
     in  eval letBody bodyEnv
-eval (Call eFun eArg) env = 
+eval (Call eFun eArg) env =
     let fClosure = eval eFun env
     in  case fClosure of
          Closure f x fBody fDeclEnv ->
@@ -77,26 +77,26 @@ ex1 = Letfun "f1" "x" (Prim "+" (Var "x") (CstI 1))
 
 {- Factorial -}
 
-ex2 = Letfun "fac" "x" 
+ex2 = Letfun "fac" "x"
                  (If (Prim "=" (Var "x") (CstI 0))
                      (CstI 1)
-                     (Prim "*" (Var "x") 
+                     (Prim "*" (Var "x")
                                (Call (Var "fac")
                                      (Prim "-" (Var "x") (CstI 1))))
                  (Call (Var "fac") (Var "n"))
 
 {- fac10 = eval ex2 [("n", Int 10)] -}
 
-ex3 = 
-    Letfun "tw" "g"
-           (Letfun "app" "x" (Call (Var "g") (Call (Var "g") (Var "x"))) 
-                  (Var "app"))
-           (Letfun "mul3" "y" (Prim "*" (CstI 3) (Var "y")) 
-                  (Call (Call (Var "tw") (Var "mul3")) (CstI 11)))
-
-ex4 = 
+ex3 =
     Letfun "tw" "g"
            (Letfun "app" "x" (Call (Var "g") (Call (Var "g") (Var "x")))
                   (Var "app"))
-           (Letfun "mul3" "y" (Prim "*" (CstI 3) (Var "y")) 
+           (Letfun "mul3" "y" (Prim "*" (CstI 3) (Var "y"))
+                  (Call (Call (Var "tw") (Var "mul3")) (CstI 11)))
+
+ex4 =
+    Letfun "tw" "g"
+           (Letfun "app" "x" (Call (Var "g") (Call (Var "g") (Var "x")))
+                  (Var "app"))
+           (Letfun "mul3" "y" (Prim "*" (CstI 3) (Var "y"))
                   (Call (Var "tw") (Var "mul3")))
