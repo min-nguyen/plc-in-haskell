@@ -19,11 +19,11 @@ import Absyn
 
 type Env a = [(String, a)]
 
-lookup :: Env a -> String -> a
-lookup env x =
+envLookup :: Env a -> String -> a
+envLookup env x =
     case env of
       []         -> error (x ++ " not found")
-      ((y, v):r) -> if x == y then v else lookup r x
+      ((y, v):r) -> if x == y then v else envLookup r x
 
 {- A runtime value is an integer or a function closure -}
 
@@ -34,7 +34,7 @@ data Value = Num Int
 eval :: Expr -> Env Value -> Value
 eval (CstI i) env = Num i
 eval (CstB b) env = Num (if b then 1 else 0)
-eval (Var  x) env = lookup env x
+eval (Var  x) env = envLookup env x
 eval (Prim ope e1 e2) env =
     let v1 = eval e1 env
         v2 = eval e2 env
@@ -82,7 +82,7 @@ ex2 = Letfun "fac" "x"
                      (CstI 1)
                      (Prim "*" (Var "x")
                                (Call (Var "fac")
-                                     (Prim "-" (Var "x") (CstI 1))))
+                                     (Prim "-" (Var "x") (CstI 1)))))
                  (Call (Var "fac") (Var "n"))
 
 {- fac10 = eval ex2 [("n", Int 10)] -}

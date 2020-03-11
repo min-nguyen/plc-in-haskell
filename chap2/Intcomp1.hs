@@ -112,7 +112,7 @@ union (xs, ys)
     = case xs of []     -> ys
                  (x:xr) -> if mem x ys
                            then union (xr, ys)
-                           else (x:(union (xr, ys)))
+                           else x : union (xr, ys)
 
 -- | minus(xs, ys) is the set of all elements in xs but not in ys
 
@@ -121,7 +121,7 @@ minus (xs, ys)
     = case xs of []     -> []
                  (x:xr) -> if mem x ys
                            then minus (xr, ys)
-                           else (x:(minus (xr, ys)))
+                           else x : minus (xr, ys)
 
 -- | Find all variables that occur free in expression e
 
@@ -135,7 +135,7 @@ freevars (Prim op e1 e2)
 
 -- | Alternative definition of closed
 
-closed2 e = (freevars e == [])
+closed2 e = freevars e == []
 
 
 {-*----------------------------------------------------------------------*-}
@@ -154,7 +154,7 @@ lookOrSelf ((y, e):r) x = if x == y then e else lookOrSelf r x
 
 remove :: [(String, Expr)] -> String -> [(String, Expr)]
 remove [] x         = []
-remove ((y, e):r) x = if x == y then r else ((y, e):(remove r x))
+remove ((y, e):r) x = if x == y then r else (y, e) : remove r x
 
 
 -- | Naive Substitution (may capture free variables)
@@ -273,7 +273,7 @@ subst (Let x erhs ebody) env
     = do erhs1   <- subst erhs env
          counter <- fresh
          let newx   = x ++ show counter
-             newenv = ((x, Var newx):(remove env x))
+             newenv = (x, Var newx) : remove env x
          ebody1  <- subst ebody newenv
          return (Let newx erhs1 ebody1)
 subst (Prim op e1 e2) env
@@ -423,7 +423,7 @@ scomp :: Expr -> [StackValue] -> [SInstr]
 scomp (CstI i) cenv = [SCstI i]
 scomp (Var x) cenv  = [SVar (getindex cenv (Bound x))]
 scomp (Let x erhs ebody) cenv
-    = scomp erhs cenv ++ scomp ebody ((Bound x):cenv) ++ [SSwap, SPop]
+    = scomp erhs cenv ++ scomp ebody (Bound x : cenv) ++ [SSwap, SPop]
 scomp (Prim op e1 e2) cenv
     = case op of
         "+" -> scomp e1 cenv ++ scomp e2 (Value:cenv) ++ [SAdd]
@@ -441,20 +441,20 @@ s5 = scomp e5 []
 
 intsToFile :: [Int] -> String -> IO ()
 intsToFile inss fname = do
-                let text = intercalate " " (map show inss)
+                let text = unwords (map show inss)
                 writeFile fname text
 
 assemble :: [SInstr] -> [Int]
 assemble [] = []
 assemble (x:xs)
  = let xs' = assemble xs
-    in case x of SCstI i -> (0:i:xs')
-                 SVar  i -> (1:i:xs')
-                 SAdd    -> (2:xs')
-                 SSub    -> (3:xs')
-                 SMul    -> (4:xs')
-                 SPop    -> (5:xs')
-                 SSwap   -> (6:xs')
+    in case x of SCstI i -> 0 : i : xs'
+                 SVar  i -> 1 : i : xs'
+                 SAdd    -> 2 : xs'
+                 SSub    -> 3 : xs'
+                 SMul    -> 4 : xs'
+                 SPop    -> 5 : xs'
+                 SSwap   -> 6 : xs'
 
 scompeval :: Expr -> [StackValue] -> IO ()
 scompeval x = flip intsToFile "fname" . assemble . scomp x

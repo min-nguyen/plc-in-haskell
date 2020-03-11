@@ -10,4 +10,4 @@ data Expr = CstI Int
           | If Expr Expr Expr
           | Letfun String String Expr Expr  -- f x fBody letBody
           | Call Expr Expr
-          deriving Show
+          deriving (Show, Eq)

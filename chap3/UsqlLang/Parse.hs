@@ -8,7 +8,7 @@ import           UsqlPar
 -- | > ghci Parse.hs Absyn.hs UsqlLex.hs UsqlPar.hs
 
 parseFromString :: String -> Stmt
-parseFromString s = (usqlParser . usqlLexer) s
+parseFromString = usqlParser . usqlLexer
 
 parseFromFile :: String -> IO ()
 parseFromFile filename = do

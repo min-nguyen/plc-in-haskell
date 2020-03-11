@@ -8,7 +8,7 @@ import           ExprPar
 -- | > ghci Parse.hs Absyn.hs ExprLex.hs ExprPar.hs
 
 parseFromString :: String -> Expr
-parseFromString s = (exprParser . exprLexer) s
+parseFromString = exprParser . exprLexer
 
 parseFromFile :: String -> IO ()
 parseFromFile filename = do

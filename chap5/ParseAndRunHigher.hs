@@ -4,6 +4,8 @@ module ParseAndRunHigher where
 import qualified HigherFun
 import qualified Parse
 
+-- TODO this does not type check
+
 let fromString = Parse.parseFromString
 
 let eval = HigherFun.eval
