@@ -562,7 +562,7 @@ happyReduction_1 (HappyAbsSyn5  happy_var_1)
 	 =  HappyAbsSyn4
 		 (happy_var_1
 	)
-happyReduction_1 _  = notHappyAtAll 
+happyReduction_1 _  = notHappyAtAll
 
 happyReduce_2 = happyReduce 4 5 happyReduction_2
 happyReduction_2 ((HappyAbsSyn6  happy_var_4) `HappyStk`
@@ -579,7 +579,7 @@ happyReduction_3 (HappyTerminal (TokenName happy_var_1))
 	 =  HappyAbsSyn6
 		 ([happy_var_1]
 	)
-happyReduction_3 _  = notHappyAtAll 
+happyReduction_3 _  = notHappyAtAll
 
 happyReduce_4 = happySpecReduce_3  6 happyReduction_4
 happyReduction_4 (HappyAbsSyn6  happy_var_3)
@@ -588,14 +588,14 @@ happyReduction_4 (HappyAbsSyn6  happy_var_3)
 	 =  HappyAbsSyn6
 		 ((happy_var_1:happy_var_3)
 	)
-happyReduction_4 _ _ _  = notHappyAtAll 
+happyReduction_4 _ _ _  = notHappyAtAll
 
 happyReduce_5 = happySpecReduce_1  7 happyReduction_5
 happyReduction_5 (HappyTerminal (TokenName happy_var_1))
 	 =  HappyAbsSyn7
 		 (Column happy_var_1
 	)
-happyReduction_5 _  = notHappyAtAll 
+happyReduction_5 _  = notHappyAtAll
 
 happyReduce_6 = happySpecReduce_3  7 happyReduction_6
 happyReduction_6 (HappyTerminal (TokenName happy_var_3))
@@ -604,14 +604,14 @@ happyReduction_6 (HappyTerminal (TokenName happy_var_3))
 	 =  HappyAbsSyn7
 		 (TableColumn happy_var_1 happy_var_3
 	)
-happyReduction_6 _ _ _  = notHappyAtAll 
+happyReduction_6 _ _ _  = notHappyAtAll
 
 happyReduce_7 = happySpecReduce_1  8 happyReduction_7
 happyReduction_7 (HappyAbsSyn7  happy_var_1)
 	 =  HappyAbsSyn8
 		 (ColumnExpr happy_var_1
 	)
-happyReduction_7 _  = notHappyAtAll 
+happyReduction_7 _  = notHappyAtAll
 
 happyReduce_8 = happyReduce 4 8 happyReduction_8
 happyReduction_8 (_ `HappyStk`
@@ -628,7 +628,7 @@ happyReduction_9 (HappyAbsSyn11  happy_var_1)
 	 =  HappyAbsSyn8
 		 (Cst happy_var_1
 	)
-happyReduction_9 _  = notHappyAtAll 
+happyReduction_9 _  = notHappyAtAll
 
 happyReduce_10 = happySpecReduce_3  8 happyReduction_10
 happyReduction_10 _
@@ -637,7 +637,7 @@ happyReduction_10 _
 	 =  HappyAbsSyn8
 		 (happy_var_2
 	)
-happyReduction_10 _ _ _  = notHappyAtAll 
+happyReduction_10 _ _ _  = notHappyAtAll
 
 happyReduce_11 = happySpecReduce_2  8 happyReduction_11
 happyReduction_11 (HappyAbsSyn8  happy_var_2)
@@ -645,7 +645,7 @@ happyReduction_11 (HappyAbsSyn8  happy_var_2)
 	 =  HappyAbsSyn8
 		 (Prim "!" [happy_var_2]
 	)
-happyReduction_11 _ _  = notHappyAtAll 
+happyReduction_11 _ _  = notHappyAtAll
 
 happyReduce_12 = happySpecReduce_3  8 happyReduction_12
 happyReduction_12 (HappyAbsSyn8  happy_var_3)
@@ -654,7 +654,7 @@ happyReduction_12 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "+" [happy_var_1, happy_var_3]
 	)
-happyReduction_12 _ _ _  = notHappyAtAll 
+happyReduction_12 _ _ _  = notHappyAtAll
 
 happyReduce_13 = happySpecReduce_3  8 happyReduction_13
 happyReduction_13 (HappyAbsSyn8  happy_var_3)
@@ -663,7 +663,7 @@ happyReduction_13 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "-" [happy_var_1, happy_var_3]
 	)
-happyReduction_13 _ _ _  = notHappyAtAll 
+happyReduction_13 _ _ _  = notHappyAtAll
 
 happyReduce_14 = happySpecReduce_3  8 happyReduction_14
 happyReduction_14 (HappyAbsSyn8  happy_var_3)
@@ -672,7 +672,7 @@ happyReduction_14 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "*" [happy_var_1, happy_var_3]
 	)
-happyReduction_14 _ _ _  = notHappyAtAll 
+happyReduction_14 _ _ _  = notHappyAtAll
 
 happyReduce_15 = happySpecReduce_3  8 happyReduction_15
 happyReduction_15 (HappyAbsSyn8  happy_var_3)
@@ -681,7 +681,7 @@ happyReduction_15 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "/" [happy_var_1, happy_var_3]
 	)
-happyReduction_15 _ _ _  = notHappyAtAll 
+happyReduction_15 _ _ _  = notHappyAtAll
 
 happyReduce_16 = happySpecReduce_3  8 happyReduction_16
 happyReduction_16 (HappyAbsSyn8  happy_var_3)
@@ -690,7 +690,7 @@ happyReduction_16 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "%" [happy_var_1, happy_var_3]
 	)
-happyReduction_16 _ _ _  = notHappyAtAll 
+happyReduction_16 _ _ _  = notHappyAtAll
 
 happyReduce_17 = happySpecReduce_3  8 happyReduction_17
 happyReduction_17 (HappyAbsSyn8  happy_var_3)
@@ -699,7 +699,7 @@ happyReduction_17 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "==" [happy_var_1, happy_var_3]
 	)
-happyReduction_17 _ _ _  = notHappyAtAll 
+happyReduction_17 _ _ _  = notHappyAtAll
 
 happyReduce_18 = happySpecReduce_3  8 happyReduction_18
 happyReduction_18 (HappyAbsSyn8  happy_var_3)
@@ -708,7 +708,7 @@ happyReduction_18 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "<>" [happy_var_1, happy_var_3]
 	)
-happyReduction_18 _ _ _  = notHappyAtAll 
+happyReduction_18 _ _ _  = notHappyAtAll
 
 happyReduce_19 = happySpecReduce_3  8 happyReduction_19
 happyReduction_19 (HappyAbsSyn8  happy_var_3)
@@ -717,7 +717,7 @@ happyReduction_19 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim ">" [happy_var_1, happy_var_3]
 	)
-happyReduction_19 _ _ _  = notHappyAtAll 
+happyReduction_19 _ _ _  = notHappyAtAll
 
 happyReduce_20 = happySpecReduce_3  8 happyReduction_20
 happyReduction_20 (HappyAbsSyn8  happy_var_3)
@@ -726,7 +726,7 @@ happyReduction_20 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "<" [happy_var_1, happy_var_3]
 	)
-happyReduction_20 _ _ _  = notHappyAtAll 
+happyReduction_20 _ _ _  = notHappyAtAll
 
 happyReduce_21 = happySpecReduce_3  8 happyReduction_21
 happyReduction_21 (HappyAbsSyn8  happy_var_3)
@@ -735,7 +735,7 @@ happyReduction_21 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim ">=" [happy_var_1, happy_var_3]
 	)
-happyReduction_21 _ _ _  = notHappyAtAll 
+happyReduction_21 _ _ _  = notHappyAtAll
 
 happyReduce_22 = happySpecReduce_3  8 happyReduction_22
 happyReduction_22 (HappyAbsSyn8  happy_var_3)
@@ -744,7 +744,7 @@ happyReduction_22 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "<=" [happy_var_1, happy_var_3]
 	)
-happyReduction_22 _ _ _  = notHappyAtAll 
+happyReduction_22 _ _ _  = notHappyAtAll
 
 happyReduce_23 = happySpecReduce_3  8 happyReduction_23
 happyReduction_23 (HappyAbsSyn8  happy_var_3)
@@ -753,7 +753,7 @@ happyReduction_23 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "&&" [happy_var_1, happy_var_3]
 	)
-happyReduction_23 _ _ _  = notHappyAtAll 
+happyReduction_23 _ _ _  = notHappyAtAll
 
 happyReduce_24 = happySpecReduce_3  8 happyReduction_24
 happyReduction_24 (HappyAbsSyn8  happy_var_3)
@@ -762,7 +762,7 @@ happyReduction_24 (HappyAbsSyn8  happy_var_3)
 	 =  HappyAbsSyn8
 		 (Prim "||" [happy_var_1, happy_var_3]
 	)
-happyReduction_24 _ _ _  = notHappyAtAll 
+happyReduction_24 _ _ _  = notHappyAtAll
 
 happyReduce_25 = happySpecReduce_0  9 happyReduction_25
 happyReduction_25  =  HappyAbsSyn9
@@ -774,14 +774,14 @@ happyReduction_26 (HappyAbsSyn10  happy_var_1)
 	 =  HappyAbsSyn9
 		 (happy_var_1
 	)
-happyReduction_26 _  = notHappyAtAll 
+happyReduction_26 _  = notHappyAtAll
 
 happyReduce_27 = happySpecReduce_1  10 happyReduction_27
 happyReduction_27 (HappyAbsSyn8  happy_var_1)
 	 =  HappyAbsSyn10
 		 ([happy_var_1]
 	)
-happyReduction_27 _  = notHappyAtAll 
+happyReduction_27 _  = notHappyAtAll
 
 happyReduce_28 = happySpecReduce_3  10 happyReduction_28
 happyReduction_28 (HappyAbsSyn10  happy_var_3)
@@ -790,14 +790,14 @@ happyReduction_28 (HappyAbsSyn10  happy_var_3)
 	 =  HappyAbsSyn10
 		 ((happy_var_1:happy_var_3)
 	)
-happyReduction_28 _ _ _  = notHappyAtAll 
+happyReduction_28 _ _ _  = notHappyAtAll
 
 happyReduce_29 = happySpecReduce_1  11 happyReduction_29
 happyReduction_29 (HappyTerminal (TokenNum happy_var_1))
 	 =  HappyAbsSyn11
 		 (CstI happy_var_1
 	)
-happyReduction_29 _  = notHappyAtAll 
+happyReduction_29 _  = notHappyAtAll
 
 happyReduce_30 = happySpecReduce_2  11 happyReduction_30
 happyReduction_30 (HappyTerminal (TokenNum happy_var_2))
@@ -805,7 +805,7 @@ happyReduction_30 (HappyTerminal (TokenNum happy_var_2))
 	 =  HappyAbsSyn11
 		 (CstI (-happy_var_2)
 	)
-happyReduction_30 _ _  = notHappyAtAll 
+happyReduction_30 _ _  = notHappyAtAll
 
 happyReduce_31 = happySpecReduce_1  11 happyReduction_31
 happyReduction_31 _
@@ -824,7 +824,7 @@ happyReduction_33 (HappyTerminal (TokenString happy_var_1))
 	 =  HappyAbsSyn11
 		 (CstS happy_var_1
 	)
-happyReduction_33 _  = notHappyAtAll 
+happyReduction_33 _  = notHappyAtAll
 
 happyNewToken action sts stk [] =
 	action 37 37 notHappyAtAll (HappyState action) sts stk []
@@ -893,7 +893,7 @@ usqlParser tks = happyRunIdentity happySomeParser where
 happySeq = happyDontSeq
 
 
-parseError :: [Token] -> a 
+parseError :: [Token] -> a
 parseError _ = error "Parse error"
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}

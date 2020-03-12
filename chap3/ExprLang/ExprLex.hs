@@ -3,7 +3,7 @@
 {-# LINE 1 "chap3/ExprLex.x" #-}
 
 module ExprLex (  exprLexer
-                , Token(..)) where 
+                , Token(..)) where
 
 #if __GLASGOW_HASKELL__ >= 603
 #include "ghcconfig.h"
@@ -11,10 +11,10 @@ module ExprLex (  exprLexer
 #include "config.h"
 #endif
 #if __GLASGOW_HASKELL__ >= 503
-import Data.Array
-import Data.Array.Base (unsafeAt)
+import           Data.Array
+import           Data.Array.Base (unsafeAt)
 #else
-import Array
+import           Array
 #endif
 {-# LINE 1 "templates/wrappers.hs" #-}
 {-# LINE 1 "templates/wrappers.hs" #-}
@@ -278,11 +278,11 @@ import Array
 
 
 
-import Data.Word (Word8)
+import           Data.Word       (Word8)
 {-# LINE 28 "templates/wrappers.hs" #-}
 
-import Data.Char (ord)
 import qualified Data.Bits
+import           Data.Char       (ord)
 
 -- | Encode a Haskell String to a list of Word8 values, in UTF8 format.
 utf8Encode :: Char -> [Word8]
@@ -357,8 +357,8 @@ alexInputPrevChar (c,_,_) = c
 alexScanTokens str = go ('\n',[],str)
   where go inp__@(_,_bs,s) =
           case alexScan inp__ 0 of
-                AlexEOF -> []
-                AlexError _ -> error "lexical error"
+                AlexEOF                  -> []
+                AlexError _              -> error "lexical error"
                 AlexSkip  inp__' _ln     -> go inp__'
                 AlexToken inp__' len act -> act (take len s) : go inp__'
 
@@ -367,7 +367,7 @@ alexGetByte (c,(b:bs),s) = Just (b,(c,bs,s))
 alexGetByte (_,[],[])    = Nothing
 alexGetByte (_,[],(c:s)) = case utf8Encode c of
                              (b:bs) -> Just (b, (c, bs, s))
-                             [] -> Nothing
+                             []     -> Nothing
 
 
 
@@ -2325,39 +2325,39 @@ alex_actions = array (0 :: Int, 12)
 {-# LINE 23 "chap3/ExprLex.x" #-}
 
 
-operator :: Char -> Token 
-operator c = case c of '+' -> TokenAdd 
-                       '-' -> TokenSub 
+operator :: Char -> Token
+operator c = case c of '+' -> TokenAdd
+                       '-' -> TokenSub
                        '*' -> TokenMul
 
-delimiter :: Char -> Token 
+delimiter :: Char -> Token
 delimiter c = case c of '(' -> TokenLPar
-                        ')' -> TokenRPar 
+                        ')' -> TokenRPar
                         '=' -> TokenEq
 
-data Token  = TokenLet 
-            | TokenIn 
-            | TokenEnd 
+data Token  = TokenLet
+            | TokenIn
+            | TokenEnd
             | TokenVar String
             | TokenNum Int
             | TokenAdd
             | TokenSub
             | TokenMul
-            | TokenEq 
-            | TokenLPar 
+            | TokenEq
+            | TokenLPar
             | TokenRPar
             deriving (Show, Eq)
 
 exprLexer :: String -> [Token]
 exprLexer s = alexScanTokens s
 
-alex_action_1 =  \s -> TokenNum (read s) 
-alex_action_2 =  \s -> operator (head s) 
-alex_action_3 =  \s -> delimiter (head s) 
-alex_action_4 =  \s -> TokenLet 
-alex_action_5 =  \s -> TokenIn 
-alex_action_6 =  \s -> TokenEnd 
-alex_action_7 =  \s -> TokenVar s 
+alex_action_1 =  \s -> TokenNum (read s)
+alex_action_2 =  \s -> operator (head s)
+alex_action_3 =  \s -> delimiter (head s)
+alex_action_4 =  \s -> TokenLet
+alex_action_5 =  \s -> TokenIn
+alex_action_6 =  \s -> TokenEnd
+alex_action_7 =  \s -> TokenVar s
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
@@ -2758,7 +2758,7 @@ alexPrevCharIsOneOf arr _ input__ _ _ = arr ! alexInputPrevChar input__
 alexRightContext (sc) user__ _ _ input__ =
      case alex_scan_tkn user__ input__ (0) input__ sc AlexNone of
           (AlexNone, _) -> False
-          _ -> True
+          _             -> True
         -- TODO: there's no need to find the longest
         -- match when checking the right context, just
         -- the first match will do.
