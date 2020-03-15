@@ -3,6 +3,7 @@ module ParseAndRunHigher where
 
 import qualified HigherFun
 import qualified Parse 
+import Absyn
 
 let fromString = Parse.parseFromString
 

@@ -1,6 +1,8 @@
 
 module ParseAndType where
 
+import Absyn
+import TypeInference
 -- fromString = Parse.parseFromString
 
 inferType = TypeInference.inferType
