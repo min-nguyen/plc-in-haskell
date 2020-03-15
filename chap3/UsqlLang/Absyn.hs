@@ -9,6 +9,7 @@ data Constant = CstI Int                    -- Integer constant
               deriving Show
 
 data Stmt     = Select [Expr] [String]      -- Select statement, where fields are expressions FROM ...
+              | EmptyQuery
               deriving Show
 
 data Column   = Column String               -- A column name: c

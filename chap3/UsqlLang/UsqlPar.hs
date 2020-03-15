@@ -893,8 +893,9 @@ usqlParser tks = happyRunIdentity happySomeParser where
 happySeq = happyDontSeq
 
 
-parseError :: [Token] -> a 
-parseError _ = error "Parse error"
+parseError :: [Token] -> a
+parseError [] = EmptyQuery
+parseError xs = error "Parse error"
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
