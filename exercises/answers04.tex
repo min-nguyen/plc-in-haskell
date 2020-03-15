@@ -36,8 +36,13 @@ Do exercises~\ref{exer-fun-build}, \ref{exer-fun-more-examples},
   directory \texttt{FunLang}\@.  It contains lexer and parser
   specifications and interpreter for a small first-order functional
   language.  Generate and compile the lexer and parser by running
-  \texttt{alex FunLex.x} and \texttt{happy FunPar.y}\@.  Parse and run some example programs using
+  \texttt{alex FunLex.x} and \texttt{happy FunPar.y}\@.
+  
+  Parse and run some example programs using
   file \texttt{Fun/ParseAndRun.hs} by running \texttt{ghci ParseAndRun.hs Fun.hs Absyn.hs Parse.hs FunLex.hs FunPar.hs} and then calling \texttt{runProgram} on an example program as a string.
+  
+  
+  Alternatively, run \texttt{ghci Parse.hs Absyn.hs FunLex.hs FunPar.hs}, and then parse some premade programs found in \texttt{Fun/Parse.hs}; you can do this by simply entering \texttt{e1} up to \texttt{e5}.
 \end{exercise}
 
 
@@ -91,7 +96,7 @@ data Expr = ...
   \texttt{FunLang/Fun.hs} to work for the new abstract syntax.  You must
   modify the closure representation to accommodate a list of
   parameters.  Also, modify the \texttt{Letfun} and \texttt{Call}
-  clauses of the interpreter.  You will need a way to zip together a
+  clauses of the interpreter.  You will need a way to combine together a
   list of variable names and a list of variable values, to get an
   environment in the form of an association list; so function
   \texttt{zip} might be useful.\\
@@ -250,17 +255,18 @@ and
 This permits functions to take multiple arguments and return multiple
 results.
 
-To extend the interpreter correspondingly, you need to introduce a new
-kind of value, namely a tuple value \texttt{TupV vs}, and to allow
-\texttt{eval} to return a result of type \texttt{value} (not just an
-integer):
+To extend the interpreter correspondingly, you need to introduce a data type for values. This also should take care of tuple values \texttt{TupV vs}. This allows the function
+\texttt{eval} to return results of different value types, (not just integers!):
+
 
 {\codesetup\begin{verbatim}
-
    data Value = 
-     | IntV Int
+     -- integer value
+       IntV Int     
+     -- tuple value
      | TupV [Value]
-     | Closure String [String] Expr (Env Value)
+     -- (funct name, args, funct body, func environment)
+     | Closure String [String] Expr (Env Value) 
    
    eval :: Expr -> Env Value -> Value
    eval = ...
@@ -365,17 +371,18 @@ data TyExpr = ...
 
 \begin{exercise}
   Add type checking for lists.  All elements of a list must have the
-  same type.  You'll need a new kind of type \texttt{TypL of typ} to
-  represent the type of lists with elements of a given type.\\
+  same type.  You'll need a new kind of type constructor \texttt{TypL Typ} to
+  represent the type of lists with elements of a given type. In the case of type checking an empty list, for simplicity, also introduce a type constructor \texttt{TypPoly} to indicate (uninstantiated) polymorphic types.\\
   
 \noindent
 \textbf{\emph{Answer}} 
 {\codesetup\begin{verbatim}
 data Typ = TypL Typ
+         | TypNil
          | ...
          
 typ :: TypExpr -> Env Typ -> Typ
-typ (CstN) env = TypL IntV
+typ (CstN) env = TypL TypPoly
 typ (ConC x CstN) env = 
     let t1 = typ x env
     in TypL t1
