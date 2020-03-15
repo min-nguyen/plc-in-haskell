@@ -16,7 +16,7 @@ data Column   = Column String               -- A column name: c
               | TableColumn String String   -- A qualified column: t.c
               deriving Show
 
-data Expr     = Star 
+data Expr     = Star
               | Cst Constant                -- Constant
               | ColumnExpr Column           -- Column
               | Prim String [Expr]          -- Built-in function

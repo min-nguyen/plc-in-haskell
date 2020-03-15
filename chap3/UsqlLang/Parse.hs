@@ -1,16 +1,16 @@
 module Parse where
 
-import Absyn
-import UsqlPar 
-import UsqlLex
+import           Absyn
+import           UsqlLex
+import           UsqlPar
 
 -- | Call generated expr lexer and parser on input string
 -- | > ghci Parse.hs Absyn.hs UsqlLex.hs UsqlPar.hs
 
 parseFromString :: String -> Stmt
-parseFromString s = (usqlParser . usqlLexer) s
+parseFromString = usqlParser . usqlLexer
 
 parseFromFile :: String -> IO ()
-parseFromFile filename = do 
+parseFromFile filename = do
     s <- readFile filename
-    print $ parseFromString s 
+    print $ parseFromString s

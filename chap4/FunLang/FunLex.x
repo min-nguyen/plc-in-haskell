@@ -1,6 +1,6 @@
 {
 module FunLex (   funLexer
-                , Token(..)) where 
+                , Token(..)) where
 }
 
 %wrapper "basic"
