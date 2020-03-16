@@ -213,8 +213,8 @@ data Token = ...
 
 
 Expr    : ....
-        | Expr '&&' Expr                         { Prim "&&" $1 $3        }
-        | Expr '||' Expr                         { Prim "||" $1 $3        }
+        | Expr "&&" Expr                         { Prim "&&" $1 $3        }
+        | Expr "||" Expr                         { Prim "||" $1 $3        }
         ....
 \end{verbatim}}
 
