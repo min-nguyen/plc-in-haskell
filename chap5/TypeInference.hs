@@ -13,7 +13,6 @@ import Data.STRef
 import Data.Char
 import Absyn
 
---open Absyn
 
 {- Environment operations -}
 
@@ -54,8 +53,8 @@ unique = nub
 data Typ s 
          = TypI                                -- integers                   
          | TypB                                -- booleans                   
-         | TypF (Typ s) (Typ s)                        -- argumentType resultType
-         | TypV (STRef s (TypeVar s))    -- type variable              
+         | TypF (Typ s) (Typ s)                -- argumentType resultType
+         | TypV (STRef s (TypeVar s))          -- type variable              
         deriving Eq 
 
 data TyVarKind s 
@@ -63,7 +62,7 @@ data TyVarKind s
                | LinkTo (Typ s)                   -- instantiated to typ        
               deriving Eq
 
-type TypeVar s = (TyVarKind s, Int) --ref                 (* kind and binding level     *)
+type TypeVar s = (TyVarKind s, Int)              -- kind and binding level     
 
 {- A type scheme is a list of generalized type variables, and a type: -}
 
@@ -109,9 +108,9 @@ freeTypeVars t =
                                   return (union (t1', t2'))
      
 
--- occurCheck :: TypeVar -> [TypeVar] -> ()
--- occurCheck tyvar tyvars =
---     if mem tyvar tyvars then error "type error: circularity" else ()
+occurCheck :: TypeVar -> [TypeVar] -> ST s ()
+occurCheck tyvar tyvars =
+    if mem tyvar tyvars then error "type error: circularity" else return ()
 
 pruneLevel :: Int -> [STRef s (TypeVar s)] -> ST s [()]
 pruneLevel maxLevel tvs = 
@@ -129,6 +128,7 @@ linkTypeVarToType :: STRef s (TypeVar s) -> Typ s -> ST s ()
 linkTypeVarToType tyvar t  =
     do (_, level) <- readSTRef tyvar
        fvs <- freeTypeVars t
+       occurCheck tyvar fvs
        pruneLevel level fvs
        setTvKind (LinkTo t) tyvar
 
@@ -235,9 +235,6 @@ showType t  =
                                    t2' <- showType t2 
                                    return $ "(" ++ t1' ++ " -> " ++ t2' ++ ")"
 
--- -- {- A type environment maps a program variable name to a typescheme -}
-
--- -- type tenv = Env Typescheme
 
 -- -- {- Type inference helper function:
 -- --    (typ lvl env e) returns the type of e in env at level lvl -}
@@ -292,7 +289,7 @@ typ lvl env expr tyvarno =
             unify tf (TypF tx tr)
             return tr
 
--- {- Type inference: tyinf e0 returns the type of e0, if any -}
+-- {- Type inference: inferTyp' e0 prints the type of e0 assuming an empty environment -}
 
 inferType :: Expr -> ST s (Typ s)
 inferType e = do
