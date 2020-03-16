@@ -84,7 +84,7 @@ Const   : num                           { CstI $1               }
 
 {
 
-parseError :: [Token] -> a 
-parseError _ = error "Parse error"
+parseError :: [Token] -> a
+parseError xs = error "Parse error"
 
 }

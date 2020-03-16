@@ -3,7 +3,8 @@ module ParseAndRunHigher where
 
 -- from chap4 FunLang
 import qualified HigherFun
-import qualified Parse
+import qualified Parse 
+import Absyn
 
 run e = HigherFun.eval e []
 
