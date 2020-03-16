@@ -14,8 +14,8 @@
 \begin{document}
 
 \begin{center}
-{\Large\bf Exercises week \arabic{exercise-sheet}\\[1ex]
-Monday 14 September 2009}\\[1ex]
+{\Large\bf Exercises week \arabic{exercise-sheet}}\\%[1ex]
+%Monday 14 September 2009}\\[1ex]
 % {\small 2009-09-10}\\[2ex]
 \end{center}
 
@@ -136,7 +136,7 @@ instead.\\
 
 \end{exercise}
 
-\begin{exercise}\label{exer-fun-tuples-eval}
+\begin{exercise}\label{exer-fun-tuples-eval} (Optional)
   Extend the abstract syntax, the concrete syntax, and the interpreter
   for the untyped functional language to handle tuple constructors
   \texttt{(...)} and component selectors \verb+#i+ such that \verb+#i+ selects the ith component in a tuple.
@@ -214,7 +214,7 @@ an \texttt{IntV i} (e.g.\ by pattern matching).\\
 \end{exercise}
 
 
-\begin{exercise}
+\begin{exercise} (Optional)
   Add lists (\texttt{CstN} is the empty list \texttt{[]},
   \texttt{ConC e1 e2} is \texttt{(e1:e2)}), and list pattern matching
   expressions to the typed functional language, where
@@ -224,7 +224,7 @@ an \texttt{IntV i} (e.g.\ by pattern matching).\\
 
 \end{exercise}
 
-\begin{exercise}
+\begin{exercise} (Optional)
   Add type checking for lists.  All elements of a list must have the
   same type.  You'll need a new kind of type \texttt{TypL of typ} to
   represent the type of lists with elements of a given type.\\
