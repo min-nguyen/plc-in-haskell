@@ -173,7 +173,7 @@ AppArgs : AtExpr AppArgs                        {  $1 $2                }
   Extend the (untyped) functional language with infix operator
   `\verb|&&|' meaning sequential logical `and' and infix operator
   `\verb+||+' meaning sequential logical `or', as in C, C++, Java,
-  C\#, F\#\@.  Note that \verb+e1 && e2+ can be encoded as \texttt{if
+  C\#, Haskell\@.  Note that \verb+e1 && e2+ can be encoded as \texttt{if
     e1 then e2 else false} and that \verb+e1 || e2+ can be encoded as
   \texttt{if e1 then true else e2}.  Hence you need only change the
   lexer and parser specifications, and make the new rules in the

@@ -25,11 +25,11 @@ The goal of this week's exercises is to understand the evaluation of a
 simple first-order functional language, and how explicit types can be
 given and checked.
 
-Do exercises~\ref{exer-fun-build}, \ref{exer-fun-more-examples},
-\ref{exer-fun-multiple-arguments},
-\ref{exer-fun-multiple-arguments-parse},
-\ref{exer-fun-sequential-logical} and
-\ref{exer-fun-multiple-arguments-typed}, and hand in the latter four.
+%Do exercises~\ref{exer-fun-build}, \ref{exer-fun-more-examples},
+%\ref{exer-fun-multiple-arguments},
+%\ref{exer-fun-multiple-arguments-parse},
+%\ref{exer-fun-sequential-logical} and
+%\ref{exer-fun-multiple-arguments-typed}, and hand in the latter four.
 
 \begin{exercise}\label{exer-fun-build}
   Get archive \texttt{fun.zip} from the homepage and unpack to
@@ -132,7 +132,7 @@ instead.\\
   Extend the (untyped) functional language with infix operator
   `\verb|&&|' meaning sequential logical `and' and infix operator
   `\verb+||+' meaning sequential logical `or', as in C, C++, Java,
-  C\#, F\#\@.  Note that \verb+e1 && e2+ can be encoded as \texttt{if
+  C\#, Haskell\@.  Note that \verb+e1 && e2+ can be encoded as \texttt{if
     e1 then e2 else false} and that \verb+e1 || e2+ can be encoded as
   \texttt{if e1 then true else e2}.  Hence you need only change the
   lexer and parser specifications (\texttt{FunLex.x} and \texttt{FunPar.y}), and make the new rules in the
