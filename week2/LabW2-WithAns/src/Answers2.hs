@@ -1,4 +1,4 @@
-module Answers1 where
+module Answers2 where
 
 -- base
 import           Prelude   hiding (lookup)

@@ -1,7 +1,7 @@
-Week 1
+Week 2
 ================================================================================
 
-> module Week1 where
+> module Week2 where
 
 > import Intro
 
