@@ -9,7 +9,9 @@ Week 3
 > -- local
 > import           Compiler
 
-TODO - summary and goals
+This week we will solidify your knowledge of compiling with indices instead of variable
+names and using a stack machine. We will do this by editing and expanding the code
+from the lectures.
 
 Exercise 1 - Compilation Without Variable Names
 --------------------------------------------------------------------------------

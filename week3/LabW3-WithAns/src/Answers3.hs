@@ -29,12 +29,6 @@ tcompSeq (PrimSeq op e1 e2) cenv
 
 -- (i)
 
--- data Expr = CstI Int
---           | Var  String
---           | Let  String Expr Expr
---           | Prim String Expr Expr
---           deriving Show TODO remove me
-
 -- Expressions as abstract syntax:
 
 -- "let z = 17 in z + z"
