@@ -138,25 +138,3 @@ s1 = scomp e1 []
 s2 = scomp e2 []
 s3 = scomp e3 []
 s5 = scomp e5 []
-
--- | Output the integers in list inss to the text file called fname:
-
-intsToFile :: [Int] -> String -> IO ()
-intsToFile inss fname = do
-                let text = unwords (map show inss)
-                writeFile fname text
-
-assemble :: [SInstr] -> [Int]
-assemble [] = []
-assemble (x:xs)
- = let xs' = assemble xs
-    in case x of SCstI i -> 0 : i : xs'
-                 SVar  i -> 1 : i : xs'
-                 SAdd    -> 2 : xs'
-                 SSub    -> 3 : xs'
-                 SMul    -> 4 : xs'
-                 SPop    -> 5 : xs'
-                 SSwap   -> 6 : xs'
-
-scompeval :: Expr -> [StackValue] -> IO ()
-scompeval x = flip intsToFile "fname" . assemble . scomp x
