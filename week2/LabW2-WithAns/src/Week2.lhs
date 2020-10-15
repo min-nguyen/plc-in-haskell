@@ -56,6 +56,7 @@ For practice on functions over custom data types try these:
 
 > -- | Simple custom data type.
 > data IntTree = Br Int IntTree IntTree | Lf
+>   deriving Show
 
 > -- | Counts the number of internal nodes ('Br' constructors) in an 'IntTree'.
 > --
@@ -87,6 +88,7 @@ For practice with polymorphic data types define these:
 
 > -- | A polymorphic tree data type.
 > data Tree a = Node a (Tree a) (Tree a) | Leaf
+>   deriving Show
 
 > -- | Creates a "right-linear" tree with 'n' nodes
 > --   A "right-linear" tree is one that only grows down the right-hand child.
@@ -95,10 +97,10 @@ For practice with polymorphic data types define these:
 > --
 > -- Examples:
 > -- >>> linear 0
-> -- Lf
+> -- Leaf
 > --
 > -- >>> linear 2
-> -- Br 2 Lf (Br 1 Lf Lf)
+> -- Node 2 Leaf (Node 1 Leaf Leaf)
 > --
 > linear :: Int -> Tree Int
 > linear = undefined -- TASK: Define me!
