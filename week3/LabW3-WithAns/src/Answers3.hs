@@ -20,7 +20,7 @@ tcompSeq (LetSeq xs ebody) cenv
     = case xs of
         []              -> tcompSeq ebody cenv
         ((x, erhs):xs') -> let cenv1 = (x:cenv)
-                            in  TLet (tcompSeq erhs cenv) (tcompSeq (LetSeq xs' ebody) cenv1)
+                           in  TLet (tcompSeq erhs cenv) (tcompSeq (LetSeq xs' ebody) cenv1)
 tcompSeq (PrimSeq op e1 e2) cenv
     = TPrim op (tcompSeq e1 cenv) (tcompSeq e2 cenv)
 
