@@ -1,19 +1,16 @@
 module Compiler where
 
+-- base
 import           Prelude                   hiding (lookup)
 
--- -----------------------------------------------------------------------------
--- Expr
--- -----------------------------------------------------------------------------
--- Our basic expression language that supports variables and let bindings with
--- static scope.
+-- local
+import Absyn
 
--- | Abstract Syntax Tree (AST) for the expression language.
-data Expr = CstI Int
-          | Var  String
-          | Let  String Expr Expr
-          | Prim String Expr Expr
-          deriving Show
+-- -----------------------------------------------------------------------------
+-- Expr Evaluator
+-- -----------------------------------------------------------------------------
+-- An evaluator for our basic expression language that supports variables and let
+-- bindings with static scope that is defined in 'Absyn'.
 
 -- | Evaluator for 'Expr'.
 eval :: Expr -> [(String, Int)] -> Int
