@@ -1,0 +1,22 @@
+cabal-version:       2.4
+
+name:                microML
+version:             0.1.0.0
+license:             NONE
+category:            Language
+extra-source-files:  CHANGELOG.md
+
+library
+  exposed-modules:  Absyn
+                    Fun
+                    Parse
+                    -- Names of modules to be created by happy and alex are listed here
+                    FunLex
+                    FunPar
+                    -- The array package is required because the generated lexer relies on it
+  build-depends:       base ^>=4.12.0.0, array
+                    -- Adding alex and happy here will get cabal to automatically use
+                    -- them to produce .hs files from your .x and .y files.
+  Build-tools:         alex, happy
+  hs-source-dirs:      src
+  default-language:    Haskell2010
