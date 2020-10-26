@@ -1,25 +1,22 @@
-{- File TypedFun/TypedFun.hs
-   An explicitly typed strict first-order functional language.
+{- An explicitly typed strict first-order functional language.
 
-   Different abstract syntax from the first-order and higher-order
-   functional language in Fun/Fun.fs and Fun/HigherFun.hs because
-   of the explicit types on function parameters and function results.
+Different abstract syntax from the first-order and higher-order functional language
+defined in 'Absyn.hs' because of the explicit types on function parameters and
+function results.
 
-   Does not admit mutually recursive function bindings.
+About this type checker:
+  * Does not admit mutually recursive function bindings.
+  * Every function takes exactly one argument.
+  * There are explicit types on the argument and result of each declared function.
+  * Expressions and variables may have type int or bool or a functional type.
+  * Functions are monomorphically and explicitly typed.
 
-   Every function takes exactly one argument.
+There is no lexer or parser specification for this explicitly typed language because
+we are also showing you how to infer types.
 
-   Type checking.  Explicit types on the argument and result of each
-   declared function.  Expressions and variables may have type int or
-   bool or a functional type.  Functions are monomorphically and
-   explicitly typed.
-
-   There is no lexer or parser specification for this explicitly typed
-   language because next week we shall infer types rather than check
-   them.
 -}
 
-module TypedFun where
+module TypeChecking where
 
 import           Prelude hiding (lookup)
 
