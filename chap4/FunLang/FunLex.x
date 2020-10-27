@@ -34,31 +34,31 @@ tokens :-
 
 {
 
-operator :: String -> Token 
-operator c = case c of "+"   -> TokenAdd 
-                       "-"   -> TokenSub 
+operator :: String -> Token
+operator c = case c of "+"   -> TokenAdd
+                       "-"   -> TokenSub
                        "*"   -> TokenMul
-                       "/"   -> TokenDiv 
+                       "/"   -> TokenDiv
                        "%"   -> TokenMod
                        "="   -> TokenEq
                        "<>"  -> TokenNE
                        ">"   -> TokenGT
-                       "<"   -> TokenLT 
-                       ">="  -> TokenGE 
-                       "<="  -> TokenLE 
+                       "<"   -> TokenLT
+                       ">="  -> TokenGE
+                       "<="  -> TokenLE
 
 
-delimiter :: String -> Token 
+delimiter :: String -> Token
 delimiter c = case c of "("   -> TokenLPar
-                        ")"   -> TokenRPar 
+                        ")"   -> TokenRPar
 
-data Token  = TokenLet 
-            | TokenIn 
-            | TokenIf 
-            | TokenElse 
-            | TokenBool Bool 
-            | TokenNot 
-            | TokenEnd 
+data Token  = TokenLet
+            | TokenIn
+            | TokenIf
+            | TokenElse
+            | TokenBool Bool
+            | TokenNot
+            | TokenEnd
             | TokenEOF
             | TokenThen
             | TokenName String
@@ -67,15 +67,15 @@ data Token  = TokenLet
             | TokenSub
             | TokenMul
             | TokenDiv
-            | TokenEq 
-            | TokenLPar 
+            | TokenEq
+            | TokenLPar
             | TokenRPar
-            | TokenMod 
-            | TokenNE 
-            | TokenGT 
-            | TokenLT 
-            | TokenGE 
-            | TokenLE 
+            | TokenMod
+            | TokenNE
+            | TokenGT
+            | TokenLT
+            | TokenGE
+            | TokenLE
             deriving (Show, Eq)
 
 funLexer :: String -> [Token]
