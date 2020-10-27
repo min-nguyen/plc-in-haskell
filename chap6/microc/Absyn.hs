@@ -40,7 +40,7 @@ data StmtOrDec =
 
 data TopDec =
       FunDec (Maybe Typ) String [(Typ, String)] Stmt
-    | VarDec
+    | VarDec Typ String
     deriving Show
 
 data Program =

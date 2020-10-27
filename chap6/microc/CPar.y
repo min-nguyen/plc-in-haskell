@@ -3,6 +3,11 @@ module CPar where
 
 import Absyn
 import CLex
+import Data.Maybe
+
+compose1 f (g, s) = (\x -> g (f x), s)
+
+nl = CstI 10
 }
 
 %name cParser
@@ -11,79 +16,79 @@ import CLex
 
 
 %token
-        cstint      { TokenCstInt $$    }
-        cstbool     { TokenCstBool $$   }
-        cststring   { TokenCstString $$ }
-        name        { TokenName $$      }
-        char        { TokenChar         }
-        else        { TokenElse         }
-        if          { TokenIf           }
-        int         { TokenInt          }
-        null        { TokenNull         }
-        print       { TokenPrint        }
-        println     { TokenPrintln      }
-        return      { TokenReturn       }
-        void        { TokenVoid         }
-        while       { TokenWhile        }
+        cstint      { TokenCstInt $$        }
+        cstbool     { TokenCstBool $$       }
+        cststring   { TokenCstString $$     }
+        name        { TokenName $$          }
+        char        { TokenChar             }
+        else        { TokenElse             }
+        if          { TokenIf               }
+        int         { TokenInt              }
+        null        { TokenNull             }
+        print       { TokenPrint            }
+        println     { TokenPrintln          }
+        return      { TokenReturn           }
+        void        { TokenVoid             }
+        while       { TokenWhile            }
 
-        '+'     { TokenPlus             }
-        '-'     { TokenMinus            }
-        '*'     { TokenTimes            }
-        '/'     { TokenDiv              }
-        '%'     { TokenMod              }
+        '+'         { TokenPlus             }
+        '-'         { TokenMinus            }
+        '*'         { TokenTimes            }
+        '/'         { TokenDiv              }
+        '%'         { TokenMod              }
 
-        "=="    { TokenEQ               }
-        "!="    { TokenNE               }
-        '>'     { TokenGT               }
-        '<'     { TokenLT               }
-        ">="    { TokenGE               }
-        "<="    { TokenLE               }
+        "=="        { TokenEQ               }
+        "!="        { TokenNE               }
+        '>'         { TokenGT               }
+        '<'         { TokenLT               }
+        ">="        { TokenGE               }
+        "<="        { TokenLE               }
 
-        '!'     { TokenNot              }
-        "||"    { TokenSeqOr            }
-        "&&"    { TokenSeqAnd           }
+        '!'         { TokenNot              }
+        "||"        { TokenSeqOr            }
+        "&&"        { TokenSeqAnd           }
 
-        '('     { TokenLPar             }
-        ')'     { TokenRPar             }
-        '{'     { TokenLBrace           }
-        '}'     { TokenRBrace           }
-        '['     { TokenLBrack           }
-        ']'     { TokenRBrack           }
-        ';'     { TokenSemi             }
-        ','     { TokenComma            }
-        '='     { TokenAssign           }
-        '&'     { TokenAmp              }
+        '('         { TokenLPar             }
+        ')'         { TokenRPar             }
+        '{'         { TokenLBrace           }
+        '}'         { TokenRBrace           }
+        '['         { TokenLBrack           }
+        ']'         { TokenRBrack           }
+        ';'         { TokenSemi             }
+        ','         { TokenComma            }
+        '='         { TokenAssign           }
+        '&'         { TokenAmp              }
 
-        eof     { TokenEOF              }
+        eof         { TokenEOF              }
 
 
-Main    : Topdecs eof                           { $1 }
+Main    : Topdecs eof                           { Prog $1                   }
 
-Topdecs : {- empty -}                           { [] }
-        | Topdec Topdecs                        { $1 : $2 }
+Topdecs : {- empty -}                           { []                        }
+        | Topdec Topdecs                        { $1 : $2                   }
 
-Topdec  : Vardec semi                           { Vardec (fst $1) (snd $1) }
-        | Fundec                                { $1                    }
+Topdec  : Vardec semi                           { VarDec (fst $1) (snd $1)  }
+        | Fundec                                { $1                        }
 
-Vardec  : Type Vardesc                          {}
+Vardec  : Type Vardesc                          { ((fst $2) $1, snd $2)     }
 
-Vardesc : name                                  {   }
-        | times Vardesc
-        | lpar Vardesc rpar                     { $2                    }
-        | Vardesc lbrack rbrack                 {   }
-        | Vardesc lbrack cstint rbrack          {   }
+Vardesc : name                                  { (\t -> t, $1)             }
+        | times Vardesc                         { compose1 TypP $2          }
+        | lpar Vardesc rpar                     { $2                        }
+        | Vardesc lbrack rbrack                 { compose1 (\t -> TypA t Nothing)       }
+        | Vardesc lbrack cstint rbrack          { compose1 (\t -> TypA t (Just $3)) $1  }
 
-Fundec  : void name lpar Paramdecs rpar Block   {   }
-        | Type name lpar Paramdecs rpar Block   {   }
+Fundec  : void name lpar Paramdecs rpar Block   { FunDec Nothing $2 $4 $6   }
+        | Type name lpar Paramdecs rpar Block   { FunDec (Just $1) $2 $4 $6 }
 
 Paramdecs : {- empty -}                         { [] }
         | Paramdecs1                            { $1 }
 
 Paramdecs1
-        : Vardec                                { [$1]  }
-        | Vardec comma Paramdecs1               { $1 : $3               }
+        : Vardec                                { [$1]                      }
+        | Vardec comma Paramdecs1               { $1 : $3                   }
 
-Block   : lbrace StmtOrDecSeq rbrace            { Block $2              }
+Block   : lbrace StmtOrDecSeq rbrace            { Block $2                  }
 
 StmtOrDecSeq
         : {- empty -}                           { []                            }
@@ -94,8 +99,8 @@ Stmt    : StmtM                                 { $1                    }
         | StmtU                                 { $1                    }
 
 StmtM   : Expr semi                             { Expr $1               }
-        | return semi                           { Return None           }
-        | return Expr semi                      { Return (Some $2)      }
+        | return semi                           { Return Nothing        }
+        | return Expr semi                      { Return (Just $2)      }
         | Block                                 { $1                    }
         | if lpar Expr rpar StmtM else StmtM    { If $3 $3 $7           }
         | while lpar Expr rpar StmtM            { While $3 $5           }
@@ -152,3 +157,10 @@ Const   : cstint                                { $1                    }
 
 Type    : int                                   { TypI                  }
         | char                                  { TypC                  }
+
+{
+
+parseError :: [Token] -> a
+parseError _ = error "Parse error"
+
+}

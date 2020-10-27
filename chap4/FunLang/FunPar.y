@@ -3,6 +3,7 @@ module FunPar where
 
 import Absyn
 import FunLex
+
 }
 
 %name funParser
