@@ -10,7 +10,7 @@ import FunLex
 %error      { parseError }
 
 
-%token  
+%token
         else    { TokenElse             }
         end     { TokenEnd              }
         bool    { TokenBool $$          }
@@ -70,7 +70,7 @@ Const   : num                                   { CstI $1               }
 
 {
 
-parseError :: [Token] -> a 
+parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
 }

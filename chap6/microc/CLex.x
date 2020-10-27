@@ -73,8 +73,9 @@ keyword s =
         _         -> TokenName s
 
 data Token =
-          TokenCstInt
-        | TokenCstString
+          TokenCstInt Int
+        | TokenCstString String
+        | TokenCstBool Int
         | TokenPlus
         | TokenMinus
         | TokenTimes
@@ -102,7 +103,6 @@ data Token =
         | TokenEOF
         | TokenChar
         | TokenElse
-        | TokenCstBool Int
         | TokenIf
         | TokenInt
         | TokenNull
