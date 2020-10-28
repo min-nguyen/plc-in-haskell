@@ -230,7 +230,3 @@ run (Prog top_decs) vs =
         (main_params, main_body)                = lookup fun_env "main"
         (main_body_env, store_1)                = bindVars (map snd main_params) vs (var_env, next_loc) store_0
     in  exec main_body main_body_env (var_env, fun_env) store_1
-
--- Example programs are found in the files ex1.c, ex2.c, etc
-
-
