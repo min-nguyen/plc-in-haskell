@@ -7,7 +7,7 @@ import Parse
 -- Exercise 1 - Regular Expressions and Finite Automata
 --------------------------------------------------------------------------------
 
--- (i) b+ | b*(a(b+a))*b*
+-- (i) b* | b*(a(b+))*b*
 
 -- (ii) (see NFA.jpg - our answer is actually also a DFA)
 
