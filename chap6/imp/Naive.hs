@@ -66,8 +66,8 @@ data Stmt = Assign String Expr
 
 -- | Execument statement and update environment
 exec :: Stmt -> NaiveStore -> IO NaiveStore
-exec (Assign s e) store = return $
-   setStore store s (eval e store)
+exec (Assign x e) store = return $
+   setStore store x (eval e store)
 exec (If e1 stmt1 stmt2) store =
    if   eval e1 store /= 0
    then exec stmt1 store
