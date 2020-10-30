@@ -362,7 +362,7 @@ data TyExpr = ...
    data TyExpr = 
      | ...
      | CstN
-     | ConC of TyExpr TyExpr
+     | ConC TyExpr TyExpr
      | Match TyExpr TyExpr (String, String, TyExpr)
      | ..
 \end{verbatim}}

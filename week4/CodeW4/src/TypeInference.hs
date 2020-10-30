@@ -259,21 +259,23 @@ inferExpr env = runInfer . inferExpr' env
           -- Check expected is same as derived:
           s3 <- unify (apply (s1 `compose` s2) primFunTy) expectedTy
           let overallSub = s1 `compose` s2 `compose` s3
-          return (overallSub, apply s3 primFunTy)
+          return (overallSub, apply s3 tv)
 
     inferExpr' env (If cond tr fl)
       = do
-          tv <- fresh
-          let expectedTy = TFun typeBool (TFun tv (TFun tv tv))
+          expectedTy <- fresh
           -- Derive actual type:
           (s1, t1) <- inferExpr' env cond
           (s2, t2) <- inferExpr' (apply s1 env) tr
           (s3, t3) <- inferExpr' (apply (s1 `compose` s2) env) fl
-          let derived = TFun t1 (TFun t2 (TFun t3 tv))
+          -- First part of if must be a bool:
+          s4 <- unify (apply (s1 `compose` s2 `compose` s3) t1) typeBool
+          -- Both if outputs must have the same type:
+          s5 <- unify (apply (s1 `compose` s2 `compose` s3 `compose` s4) t2)
+                      (apply (s1 `compose` s2 `compose` s3 `compose` s4) t3)
           -- Check expected is same as derived:
-          s4 <- unify (apply (s1 `compose` s2 `compose` s3) derived) expectedTy
-          let overallSub = s1 `compose` s2 `compose` s3 `compose` s4
-          return (overallSub, apply s4 derived)
+          let overallSub = s1 `compose` s2 `compose` s3 `compose` s4 `compose` s5
+          return (overallSub, apply (s4 `compose` s5) t3)
 
     inferExpr' env (Letfun f x e1 e2)
       = do
@@ -319,6 +321,6 @@ exBool   = inferExpr emptyTyenv (CstB True)
 exVar    = inferExpr (TypeEnv $ Map.singleton "a" (Forall [TV "a"] (TCon "Bool"))) (Var "a")
 exLet    = inferExpr emptyTyenv (Let "x" (CstI 7) (Var "x"))
 exPrim   = inferExpr emptyTyenv (Prim "==" (CstI 7) (CstI 7))
-exIf     = inferExpr emptyTyenv (If (CstB True) (CstI 7) (CstI 7))
+exIf     = inferExpr emptyTyenv (If (CstB True) (CstB True) (CstB True))
 exLetFun = inferExpr emptyTyenv (Letfun "f" "x" (Var "x") (Var "f"))
 exCall   = inferExpr emptyTyenv (Call (Letfun "f" "x" (Var "x") (Var "f")) (CstI 7))
