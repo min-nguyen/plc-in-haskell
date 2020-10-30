@@ -8,10 +8,6 @@ Type inference follows this general process:
     - Guess the type of an expression (normally this involves just inserting a placeholder)
     - Slowly equate types in until you achieve a "principal type scheme".
 
-In this file we utilise the STRef monad, which gives us access to mutable references,
-something that we require for this type inference algorithm.
-You can find out more about this here: https://en.wikibooks.org/wiki/Haskell/Mutable_objects
-
 NOTE:- The operator (=) only requires that the arguments have the same type.
 -}
 
@@ -95,7 +91,7 @@ data Typ s
 --   an uninstantiated.
 data TyVarKind s
     = NoLink String  -- ^ Uninstantiated type var.
-    | LinkTo (Typ s) -- ^ Instantiated to typ.
+    | LinkTo (Typ s) -- ^ Instantiated to type.
     deriving Eq
 
 -- | A type variable consists of its type (whether it is instantiated or not)
