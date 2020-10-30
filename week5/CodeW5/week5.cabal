@@ -1,0 +1,22 @@
+cabal-version:       2.4
+
+name:                week5
+version:             0.1.0.0
+license:             NONE
+category:            Language
+extra-source-files:  CHANGELOG.md
+
+library
+  exposed-modules:  Absyn
+                    CLex
+                    CPar
+                    Interp
+                    Naive
+                    -- The array package is required because the generated lexer relies on it
+  build-depends:       base ^>=4.12.0.0, array, containers
+                    -- Adding alex and happy here will get cabal to automatically use
+                    -- them to produce .hs files from your .x and .y files.
+  Build-tools:         alex, happy
+  hs-source-dirs:      imp
+                       microc
+  default-language:    Haskell2010
