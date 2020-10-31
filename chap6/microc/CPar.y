@@ -73,7 +73,7 @@ import Data.Maybe
 Main    : Topdecs eof                           { Prog $1                   }
 
 Topdecs : {- empty -}                           { []                        }
-        | Topdec Topdecs                        { $1 : $2                   }
+        | Topdec Topdecs                        { ($1 : $2)                   }
 
 Topdec  : Vardec ';'                            { VarDec (fst $1) (snd $1)  }
         | Fundec                                { $1                        }
@@ -94,14 +94,14 @@ Paramdecs : {- empty -}                         { [] }
 
 Paramdecs1
         : Vardec                                { [$1]                      }
-        | Vardec ',' Paramdecs1                 { $1 : $3                   }
+        | Vardec ',' Paramdecs1                 { ($1 : $3)                   }
 
 Block   : '{' StmtOrDecSeq '}'                  { Block $2                  }
 
 StmtOrDecSeq
         : {- empty -}                           { []                            }
-        | Stmt StmtOrDecSeq                     { (Stmt $1) : $2                }
-        | Vardec ';' StmtOrDecSeq               { (Dec (fst $1) (snd $1)) : $3   }
+        | Stmt StmtOrDecSeq                     { ((Stmt $1) : $2)                }
+        | Vardec ';' StmtOrDecSeq               { ((Dec (fst $1) (snd $1)) : $3)   }
 
 Stmt    : StmtM                                 { $1                    }
         | StmtU                                 { $1                    }
@@ -156,11 +156,11 @@ Exprs   : {- empty -}                           { []                    }
         | Exprs1                                { $1                    }
 
 Exprs1  : Expr                                  { [$1]                  }
-        | Expr ',' Exprs1                       { $1 : $3               }
+        | Expr ',' Exprs1                       { ($1 : $3)             }
 
 Const   : cstint                                { $1                    }
         | cstbool                               { $1                    }
-        | '-' cstint                            { (- $2)                }
+        | '-' cstint                            { (- ($2))              }
         | null                                  { (-1)                  }
 
 Type    : int                                   { TypI                  }
