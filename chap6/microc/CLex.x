@@ -19,8 +19,8 @@ tokens :-
     (\=\=|\!\=|\>\=|\<\=|\|\||\&\&)        { \s -> let (x:y:ys) = s in operator [x,y]}
     (\+|\-|\*|\/|\%|\>|\<|\=|\&|\!)        { \s -> operator ([head s])  }
     (\(|\)|\{|\}|\[|\]|\;|\,)              { \s -> delimiter ([head s]) }
-    \/\* $printable \*\/                   ;
-    \/\/ $printable                        ;
+    "/*" .* "*/"                           ;
+    "//".*                                 ;
     @string                                { \s -> TokenCstString s }
     eof                                    { \s -> TokenEOF }
 {

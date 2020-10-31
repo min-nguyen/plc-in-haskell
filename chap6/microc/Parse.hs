@@ -15,3 +15,7 @@ parseFromFile filename = do
     s <- readFile filename
     print $ parseFromString s
 
+lexFromFile :: String -> IO ()
+lexFromFile filename = do
+    s <- readFile filename
+    print $ cLexer s
