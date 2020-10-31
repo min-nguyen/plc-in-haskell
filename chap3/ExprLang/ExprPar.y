@@ -8,10 +8,10 @@ import ExprLex
 %name exprParser
 %tokentype  { ExprLex.Token }
 %error      { parseError }
-%left '-' '+' 
+%left '-' '+'
 %left '*'
 
-%token 
+%token
         let     { TokenLet  }
         in      { TokenIn   }
         end     { TokenEnd  }
@@ -34,10 +34,10 @@ Expr    : var                          { Var  $1           }
         | Expr '*' Expr                { Prim "*" $1 $3    }
         | Expr '+' Expr                { Prim "+" $1 $3    }
         | Expr '-' Expr                { Prim "-" $1 $3    }
-        
+
 {
 
-parseError :: [Token] -> a 
+parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
 }

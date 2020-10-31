@@ -132,4 +132,6 @@ cEscape s =
         "\\r"  -> '\r'
         _      -> error "Lexer error: impossible C escape"
 
+cLexer :: String -> [Token]
+cLexer s = alexScanTokens s
 }

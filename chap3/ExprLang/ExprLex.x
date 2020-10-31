@@ -1,6 +1,6 @@
 {
 module ExprLex (  exprLexer
-                , Token(..)) where 
+                , Token(..)) where
 }
 
 %wrapper "basic"
@@ -22,26 +22,26 @@ tokens :-
 
 {
 
-operator :: Char -> Token 
-operator c = case c of '+' -> TokenAdd 
-                       '-' -> TokenSub 
+operator :: Char -> Token
+operator c = case c of '+' -> TokenAdd
+                       '-' -> TokenSub
                        '*' -> TokenMul
 
-delimiter :: Char -> Token 
+delimiter :: Char -> Token
 delimiter c = case c of '(' -> TokenLPar
-                        ')' -> TokenRPar 
+                        ')' -> TokenRPar
                         '=' -> TokenEq
 
-data Token  = TokenLet 
-            | TokenIn 
-            | TokenEnd 
+data Token  = TokenLet
+            | TokenIn
+            | TokenEnd
             | TokenVar String
             | TokenNum Int
             | TokenAdd
             | TokenSub
             | TokenMul
-            | TokenEq 
-            | TokenLPar 
+            | TokenEq
+            | TokenLPar
             | TokenRPar
             deriving (Show, Eq)
 
