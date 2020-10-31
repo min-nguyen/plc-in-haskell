@@ -24,7 +24,7 @@ Exercise 2 - Grammars
 --------------------------------------------------------------------------------
 
 (i) Write out the rightmost derivation of this string using the Expr grammar in
-     ExprLang/ExprPar.y
+    ExprLang/ExprPar.y
 
 < let z = 17 in z + 2 * 3 end
 

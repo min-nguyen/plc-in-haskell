@@ -8,6 +8,6 @@ data Expr = CstI Int
           | Let String Expr Expr
           | Prim String Expr Expr
           | If Expr Expr Expr
-          | Letfun String String Expr Expr -- f x fBody letBody
+          | Letfun String String Expr Expr  -- f x fBody letBody
           | Call Expr Expr
           deriving (Show, Eq)

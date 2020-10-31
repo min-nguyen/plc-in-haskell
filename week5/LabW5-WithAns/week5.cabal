@@ -1,0 +1,30 @@
+cabal-version:       2.4
+
+name:                week4
+version:             0.1.0.0
+license:             NONE
+category:            Language
+extra-source-files:  CHANGELOG.md
+
+library
+  exposed-modules:  Week5
+                    Answers5
+                    ExplicitTypes
+                    -- microML
+                    Absyn
+                    Eval
+                    FunLex
+                    FunPar
+                    Parse
+                    TypeInference
+                    -- The array package is required because the generated lexer relies on it
+  build-depends:       base ^>=4.12.0.0, array,
+                    -- These packages are required for the type inference
+                    containers,
+                    mtl
+                    -- Adding alex and happy here will get cabal to automatically use
+                    -- them to produce .hs files from your .x and .y files.
+  Build-tools:         alex, happy
+  hs-source-dirs:      src
+                       microML
+  default-language:    Haskell2010

@@ -10,9 +10,12 @@
 
 module Naive where
 
+-- base
+import           Data.Maybe
+
+-- containers
 import qualified Data.Map as Map
-import Data.Map (Map)
-import Data.Maybe
+import           Data.Map (Map)
 
 -- | A naive store is essentially an environment
 --   i.e. a map from names (strings) to values (ints)

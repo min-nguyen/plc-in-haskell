@@ -34,7 +34,7 @@ compilation function.
    to work for the extended 'ExprSeq' language.
 
 > -- | Compiles the sequential let expression language to our internal 'TExpr' representation.
-> tcompSeq :: ExprSeq -> TExpr
+> tcompSeq :: ExprSeq -> [String] -> TExpr
 > tcompSeq = undefined -- TASK: Define me!
 
 Exercise 2 - Stack Machines

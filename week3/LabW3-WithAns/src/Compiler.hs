@@ -150,7 +150,7 @@ seval _ _                       = error "seval: too few operands on stack"
 --   the run-time stack.
 data StackValue = Value         -- a computed value
                 | Bound String  -- a bound variable
-                deriving Eq
+                deriving (Eq, Show)
 
 -- | Compilation to a list of instructions for a unified-stack machine
 scomp :: Expr -> [StackValue] -> [SInstr]
