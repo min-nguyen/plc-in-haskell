@@ -1,9 +1,18 @@
-// micro-C example 8 -- loop 20 million times
+// micro-C example 10 -- return a result from function; nested blocks
 
-void main() {
+void main(int n) {
   int i;
-  i = 20000000;
-  while (i) {
-    i = i - 1;
+  i = 0;
+  while (i < n) {
+    print fac(i);
+    i = i + 1;
   }
+  print n;
+}
+
+int fac(int n) {
+  if (n == 0)
+    return 1;
+  else
+    return n * fac(n-1);
 }

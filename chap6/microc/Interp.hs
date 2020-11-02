@@ -9,6 +9,7 @@ import           Data.Map    (Map)
 
 -- local
 import           Absyn
+import           Parse
 
 -- | Simple environment operations
 
@@ -229,9 +230,17 @@ callFun f es loc_env glo_env store =
 -- | Interpret a complete micro-C program by initializing the store
 --   and global environments, then invoking its `main' function.
 
+-- | program -> main function's arguments -> environment
 run :: Program -> [Value] -> IO Store
 run (Prog top_decs) vs =
     let ((var_env, next_loc), fun_env, store_0) = initEnvAndStore top_decs
         (main_params, main_body)                = lookup fun_env "main"
         (main_body_env, store_1)                = bindVars (map snd main_params) vs (var_env, next_loc) store_0
     in  exec main_body main_body_env (var_env, fun_env) store_1
+
+
+-- | filename -> main function's arguments -> environment
+runFromFile :: String -> [Value] -> IO Store
+runFromFile filename args = do
+    program <- parseFromFile filename
+    run program args

@@ -1,16 +1,10 @@
-// micro-C example 5 -- return a result via a pointer argument; nested blocks
+// micro-C example 7 -- an infinite loop
 
-void main(int n) {
-  int r;
-  r = n;
-  {
-    int r;
-    square(n, &r);
-    print r;
+void main() {
+  int i;
+  i = 0;
+  while (true) {
+    i = i + 1;
   }
-  print r;
-}
-
-void square(int i, int *rp) {
-  *rp = i * i;
+  print 999999;
 }
