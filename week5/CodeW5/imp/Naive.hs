@@ -1,17 +1,9 @@
-{-
-   A naive imperative language with "for" and "while" loops
-
-   To test this out and execute example programs, run:
-   > ghci Naive.hs
-   > run ex1
-   > run ex2
--}
-
+{- A naive imperative language with "for" and "while" loops. -}
 
 module Naive where
 
 -- base
-import           Data.Maybe
+import Data.Maybe
 
 -- containers
 import qualified Data.Map as Map

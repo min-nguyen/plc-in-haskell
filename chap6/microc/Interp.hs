@@ -1,9 +1,14 @@
 module Interp where
 
-import Prelude hiding (lookup)
-import Absyn
+-- base
+import           Prelude hiding (lookup)
+
+-- containers
 import qualified Data.Map as Map
-import Data.Map (Map)
+import           Data.Map    (Map)
+
+-- local
+import           Absyn
 
 -- | Simple environment operations
 

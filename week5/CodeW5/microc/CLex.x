@@ -19,8 +19,8 @@ tokens :-
     (\=\=|\!\=|\>\=|\<\=|\|\||\&\&)        { \s -> let (x:y:ys) = s in operator [x,y]}
     (\+|\-|\*|\/|\%|\>|\<|\=|\&|\!)        { \s -> operator ([head s])  }
     (\(|\)|\{|\}|\[|\]|\;|\,)              { \s -> delimiter ([head s]) }
-    \/\* $printable \*\/                   ;
-    \/\/ $printable                        ;
+    "/*" [. \n]* "*/"                         ;
+    "//".*                                 ;
     @string                                { \s -> TokenCstString s }
     eof                                    { \s -> TokenEOF }
 {
@@ -132,4 +132,6 @@ cEscape s =
         "\\r"  -> '\r'
         _      -> error "Lexer error: impossible C escape"
 
+cLexer :: String -> [Token]
+cLexer s = alexScanTokens s
 }
