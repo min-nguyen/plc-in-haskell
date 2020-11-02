@@ -1,25 +1,23 @@
-// micro-C example 4 -- compute and print array of factorials
-
-int a[20];
+// micro-C example 6 -- return a result via a pointer argument; nested blocks
 
 void main(int n) {
   int i;
   i = 0;
-  int f;
-  f = 1;
   while (i < n) {
-    a[i] = f;
+    int n;
+    fac(i, &n);
+    print n;
     i = i + 1;
-    f = f * i;
   }
-  printarr(n, a);
+  print n;
 }
 
-void printarr(int len, int a[]) {
-  int i;
-  i = 0;
-  while (i < len) {
-    print a[i];
-    i=i+1;
+void fac(int n, int *res) {
+  if (n == 0)
+    *res = 1;
+  else {
+    int tmp;
+    fac(n-1, &tmp);
+    *res = tmp * n;
   }
 }

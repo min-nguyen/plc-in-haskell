@@ -1,6 +1,5 @@
 module Parse where
 
--- local
 import           Absyn
 import           CLex
 import           CPar
@@ -15,7 +14,9 @@ parseFromFile filename = do
     print program
     return program
 
-lexFromFile :: String -> IO ()
+lexFromFile :: String -> IO [Token]
 lexFromFile filename = do
     s <- readFile filename
-    print $ cLexer s
+    let tokenStream = cLexer s
+    print tokenStream
+    return tokenStream
