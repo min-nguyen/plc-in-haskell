@@ -1,6 +1,5 @@
 module Parse where
 
--- local
 import           Absyn
 import           CLex
 import           CPar

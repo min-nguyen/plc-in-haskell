@@ -25,7 +25,7 @@ import Data.Maybe
 %token
         cstint      { TokenCstInt $$        }
         cstbool     { TokenCstBool $$       }
-        cststring   { TokenCstString $$     }
+
         name        { TokenName $$          }
         char        { TokenChar             }
         else        { TokenElse             }
@@ -66,11 +66,10 @@ import Data.Maybe
         '='         { TokenAssign           }
         '&'         { TokenAmp              }
 
-        eof         { TokenEOF              }
 
 %%
 
-Main    : Topdecs eof                           { Prog $1                   }
+Main    : Topdecs                               { Prog $1                   }
 
 Topdecs : {- empty -}                           { []                        }
         | Topdec Topdecs                        { ($1 : $2)                   }
