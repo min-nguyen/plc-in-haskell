@@ -1,6 +1,6 @@
 // micro-C example 4 -- compute and print array of factorials
 
-int a[20];			/* Must be global */
+int a[20];
 
 void main(int n) {
   int i;

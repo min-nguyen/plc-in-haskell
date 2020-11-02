@@ -19,10 +19,8 @@ tokens :-
     (\=\=|\!\=|\>\=|\<\=|\|\||\&\&)        { \s -> let (x:y:ys) = s in operator [x,y]}
     (\+|\-|\*|\/|\%|\>|\<|\=|\&|\!)        { \s -> operator ([head s])  }
     (\(|\)|\{|\}|\[|\]|\;|\,)              { \s -> delimiter ([head s]) }
-    "/*" [. \n]* "*/"                         ;
     "//".*                                 ;
     @string                                { \s -> TokenCstString s }
-    eof                                    { \s -> TokenEOF }
 {
 
 operator :: String -> Token
@@ -100,7 +98,6 @@ data Token =
         | TokenRBrack
         | TokenSemi
         | TokenComma
-        | TokenEOF
         | TokenChar
         | TokenElse
         | TokenIf
@@ -113,24 +110,6 @@ data Token =
         | TokenWhile
         | TokenName String
         deriving (Show, Eq)
-
-funLexer :: String -> [Token]
-funLexer s = alexScanTokens s
-
-
-cEscape :: String -> Char
-cEscape s =
-    case s of
-        "\\\\" -> '\\'
-        "\\\"" -> '\"'
-        "\\a"  -> '\007'
-        "\\b"  -> '\008'
-        "\\t"  -> '\t'
-        "\\n"  -> '\n'
-        "\\v"  -> '\011'
-        "\\f"  -> '\012'
-        "\\r"  -> '\r'
-        _      -> error "Lexer error: impossible C escape"
 
 cLexer :: String -> [Token]
 cLexer s = alexScanTokens s

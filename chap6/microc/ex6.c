@@ -3,17 +3,17 @@
 void main(int n) {
   int i;
   i = 0;
-  while (i < n) {		/* Outer n */
+  while (i < n) {
     int n;
     fac(i, &n);
-    print n;			/* Inner n */
+    print n;
     i = i + 1;
   }
   print n;
 }
 
 void fac(int n, int *res) {
-  if (n == 0)			/* fac's n */
+  if (n == 0)
     *res = 1;
   else {
     int tmp;
