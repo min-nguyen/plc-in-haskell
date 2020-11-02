@@ -7,12 +7,16 @@ import           CPar
 parseFromString :: String -> Program
 parseFromString = cParser . cLexer
 
-parseFromFile :: String -> IO ()
+parseFromFile :: String -> IO Program
 parseFromFile filename = do
     s <- readFile filename
-    print $ parseFromString s
+    let program = parseFromString s
+    print program
+    return program
 
-lexFromFile :: String -> IO ()
+lexFromFile :: String -> IO [Token]
 lexFromFile filename = do
     s <- readFile filename
-    print $ cLexer s
+    let tokenStream = cLexer s
+    print tokenStream
+    return tokenStream
